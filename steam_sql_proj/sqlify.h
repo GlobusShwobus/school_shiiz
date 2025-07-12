@@ -62,7 +62,6 @@ namespace ORDO {
 		std::unique_ptr<sql::Connection> mConnect = nullptr;
 		std::unique_ptr<sql::Statement> mStatement = nullptr;
 		bool mIsGood = false;
-		bool mIsSchemaSet = false;
 		std::string SSQLStreamError;
 
 		static constexpr std::string_view defaultLocalServer = "tcp://127.0.0.1:3306";
@@ -73,7 +72,6 @@ namespace ORDO {
 			mConnect.release();
 			mDriver = nullptr;
 			mIsGood = false;
-			mIsSchemaSet = false;
 			SSQLStreamError.clear();
 
 			//establish driver, can fail i guess but should not be likely
@@ -129,9 +127,6 @@ namespace ORDO {
 
 		bool isGood()const {
 			return mIsGood;
-		}
-		bool isSchemaSet()const {
-			return mIsSchemaSet;
 		}
 		std::string_view getStreamError()const {
 			return SSQLStreamError;
