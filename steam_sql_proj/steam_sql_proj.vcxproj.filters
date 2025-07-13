@@ -69,6 +69,9 @@
     <ClCompile Include="NumberGenerator.cpp">
       <Filter>NumberGenerator</Filter>
     </ClCompile>
+    <ClCompile Include="SQLFlight.cpp">
+      <Filter>sqlify</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Database.h">
@@ -101,7 +104,7 @@
     <ClInclude Include="steamURlEditor.h">
       <Filter>steam</Filter>
     </ClInclude>
-    <ClInclude Include="sqlify.h">
+    <ClInclude Include="SQLFlight.h">
       <Filter>sqlify</Filter>
     </ClInclude>
     <ClInclude Include="myDataStructs.h">
@@ -109,6 +112,12 @@
     </ClInclude>
     <ClInclude Include="NumberGenerator.h">
       <Filter>NumberGenerator</Filter>
+    </ClInclude>
+    <ClInclude Include="SQLTable.h">
+      <Filter>sqlify</Filter>
+    </ClInclude>
+    <ClInclude Include="SQLUser.h">
+      <Filter>sqlify</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

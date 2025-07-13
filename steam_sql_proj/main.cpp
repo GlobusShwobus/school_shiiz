@@ -8,6 +8,11 @@
 #include "Inputs.h"
 #include "myHelpers.h"
 #include "steamURlEditor.h"
+#include "SQLUser.h"
+#include "SQLFlight.h"
+#include "myDataStructs.h"
+#include "NumberGenerator.h"
+
 
 using namespace ORDO;
 /*
@@ -167,7 +172,6 @@ void testtitle() {
         lazy::console_clear();
     }
 }
-
 void teststeamurlThing_part2(const std::unique_ptr<Request::ResoponseBuffer>& poop) {
     if (poop.get()->isSuccess) {
 
@@ -228,6 +232,100 @@ void teststeamUrlThing(){
 * possible to do a vanity check for steam API to check validity < ResolveVanityURL >
 */
 
+//SAVE THESE TWO IN SCRIPT PART LATER
+//bool establishSchema(sql::Statement& stmt)
+//{
+//    const std::string name = GenerateRandomName("LANDING_");
+//    const std::string cmdStatement = "CREATE DATABASE " + name + ";";
+//    try {
+//        std::unique_ptr<sql::Statement> statement(mConnect->createStatement());
+//        statement->execute(cmdStatement);
+//        mIsSchemaSet = true;
+//        return true;
+//    }
+//    catch (const sql::SQLException& expt) {
+//        SSQLStreamError = "Schema creation error: " + std::string(expt.what());
+//        mIsSchemaSet = false;
+//    }
+//    return false;
+//}
+
+ std::string GenerateRandomName(std::string prefix = "") {
+ 	static constexpr int ASCII_NUM_START = 48;
+ 	static constexpr int ASCII_NUM_END = 57;
+ 	static constexpr int ASCII_BIGCHAR_START = 65;
+ 	static constexpr int ASCII_BIGCHAR_END = 90;
+ 	static constexpr int ASCII_SMALLCHAR_START = 97;
+ 	static constexpr int ASCII_SMALLCHAR_END = 122;
+ 
+ 	NumberGenerator rng;
+ 
+ 	for (int i = 0; i < 10; i++)
+ 	{
+ 		int dice = rng.getRandInt(0, 2);
+ 		char c;
+ 		switch (dice) {
+ 		case 0:c = rng.getRandInt(ASCII_NUM_START      , ASCII_NUM_END);	   break;
+ 		case 1:c = rng.getRandInt(ASCII_BIGCHAR_START  , ASCII_BIGCHAR_END);   break;
+ 		case 2:c = rng.getRandInt(ASCII_SMALLCHAR_START, ASCII_SMALLCHAR_END); break;
+ 		default:
+ 			printf("random name generation RNG missfire\n");
+ 			continue;
+ 		}
+ 		prefix.push_back(c);
+ 	}
+ 	return prefix;
+ }
+ //#########################################
+void testSQLFlightSystem() {
+    SQLUser user;
+    SteamSummary summary;
+    SQLFlight flight;
+
+    lazy::console_title();
+
+    //initialize summary members
+    summary.name = "Bob";
+    summary.accountUrl = "zombocom";
+    summary.countryCode = "EE";
+    long long lalalong = 946684800;//jan 1st 2000
+    summary.creationDate = lazy::UnixTime(lalalong);
+    summary.playerId = 123456;
+    summary.playerLevel = 69;
+    //##############################
+
+    //ask for IP, sql user, and sql password
+    std::string IP;
+    std::string username;
+    std::string password;
+    std::cout << "Enter IP: ";
+    IP = Inputs::InputStr();
+    std::cout << "Enter username: ";
+    username = Inputs::InputStr();
+    std::cout << "Enter password: ";
+    password = Inputs::InputStr();
+
+    user = SQLUser(IP, username, password);
+    
+    flight.connect(user.getIP(), user.getSName(), user.getSPassword());
+    if (flight.isGood()) {
+        auto& statement = flight.acquireStatement();
+        const std::string schemaName = GenerateRandomName("LANDING_");
+        const std::string cmdStatement = "CREATE DATABASE " + schemaName + ";";
+        statement.execute(cmdStatement);
+        flight.setSchema(schemaName);
+        statement.execute(std::string(summary.createTableStatement()));
+        flight.Insert(summary);
+        std::cout << '\n' << "SUCCESS";
+        lazy::console_wait();
+    }
+    else {
+        std::cout << '\n' << flight.getStreamError();
+        lazy::console_wait();
+        return;
+    }
+}
+
 int main() {
     _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
     _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
@@ -236,12 +334,7 @@ int main() {
     _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
     _CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);
 
-
-        lazy::console_clear();
-        teststeamUrlThing();
-        lazy::console_wait();
-
-
+    testSQLFlightSystem();
 
     _CrtDumpMemoryLeaks();
     

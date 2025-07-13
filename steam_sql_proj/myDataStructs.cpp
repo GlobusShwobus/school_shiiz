@@ -21,6 +21,8 @@ namespace ORDO {
 	}
 	void SteamSummary::bindToStatement(sql::PreparedStatement* stmt)const
 	{
+		if (!stmt)
+			throw std::runtime_error("prepared statement == nullptr");
 		stmt->setUInt64(1, playerId);
 		stmt->setString(2, name);
 		stmt->setInt(3, playerLevel);
@@ -48,6 +50,8 @@ namespace ORDO {
 	}
 	void SteamGame::bindToStatement(sql::PreparedStatement* stmt)const
 	{
+		if (!stmt)
+			throw std::runtime_error("prepared statement == nullptr");
 		stmt->setUInt64(1, gameID);
 		stmt->setString(2, gameName);
 		stmt->setInt(3, gameVersion);
@@ -74,6 +78,8 @@ namespace ORDO {
 	}
 	void SteamActivity::bindToStatement(sql::PreparedStatement* stmt)const
 	{
+		if (!stmt)
+			throw std::runtime_error("prepared statement == nullptr");
 		stmt->setUInt64(1, gameID);
 		stmt->setString(2, gameName);
 		stmt->setInt(3, playtimeForever);
@@ -99,6 +105,8 @@ namespace ORDO {
 	}
 	void SteamAchievements::bindToStatement(sql::PreparedStatement* stmt)const
 	{
+		if (!stmt)
+			throw std::runtime_error("prepared statement == nullptr");
 		stmt->setUInt64(1, gameID);
 		stmt->setString(2, achievementID);
 		stmt->setString(3, achievementName);

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "sqlify.h"
+#include "SQLTable.h"
 
 namespace ORDO {
 
-	class SteamSummary :public SSQLTable {
+	class SteamSummary :public SQLTable {
 	public:
 		std::string name;
 		std::string accountUrl;
@@ -19,7 +19,7 @@ namespace ORDO {
 		void bindToStatement(sql::PreparedStatement* stmt)const override;
 	};
 
-	class SteamGame : public SSQLTable {
+	class SteamGame : public SQLTable {
 	public:
 		std::string gameName;
 		std::string lastPlayedDate;
@@ -33,7 +33,7 @@ namespace ORDO {
 		void bindToStatement(sql::PreparedStatement* stmt)const override;
 	};
 
-	class SteamActivity :public SSQLTable {
+	class SteamActivity :public SQLTable {
 	public:
 		std::string gameName;
 		int gameID = 0;
@@ -47,7 +47,7 @@ namespace ORDO {
 	};
 
 
-	class SteamAchievements : public SSQLTable {
+	class SteamAchievements : public SQLTable {
 	public:
 		std::string achievementID;
 		std::string achievementName;

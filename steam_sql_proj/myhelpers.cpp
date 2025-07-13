@@ -70,7 +70,7 @@ namespace ORDO {
                    )";
             static constexpr std::string_view padding =
                 "#######################################################################";
-            std::cout << title << '\n' << padding;
+            std::cout << title << '\n' << padding << '\n';
         }
         void console_clear() {
             system("cls");
