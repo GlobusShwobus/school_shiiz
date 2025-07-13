@@ -145,32 +145,23 @@
   <ItemGroup>
     <ClCompile Include="logMessage.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Database.cpp" />
-    <ClCompile Include="Definitions.cpp" />
     <ClCompile Include="Inputs.cpp" />
     <ClCompile Include="myDataStructs.cpp" />
     <ClCompile Include="myhelpers.cpp" />
     <ClCompile Include="NumberGenerator.cpp" />
-    <ClCompile Include="Pages.cpp" />
     <ClCompile Include="SQLFlight.cpp" />
-    <ClCompile Include="Steam.cpp" />
     <ClCompile Include="steamURLEditor.cpp" />
     <ClCompile Include="web_request.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="myDataStructs.h" />
     <ClInclude Include="myhelpers.h" />
-    <ClInclude Include="Database.h" />
-    <ClInclude Include="Entity.h" />
     <ClInclude Include="Inputs.h" />
     <ClInclude Include="logMessage.h" />
-    <ClInclude Include="MakeFile.h" />
     <ClInclude Include="NumberGenerator.h" />
-    <ClInclude Include="Pages.h" />
     <ClInclude Include="SQLFlight.h" />
     <ClInclude Include="SQLUser.h" />
     <ClInclude Include="SQLTable.h" />
-    <ClInclude Include="Steam.h" />
     <ClInclude Include="steamURlEditor.h" />
     <ClInclude Include="web_request.h" />
   </ItemGroup>
