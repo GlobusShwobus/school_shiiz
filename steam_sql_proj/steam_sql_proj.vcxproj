@@ -161,7 +161,7 @@
     <ClInclude Include="NumberGenerator.h" />
     <ClInclude Include="SQLFlight.h" />
     <ClInclude Include="SQLUser.h" />
-    <ClInclude Include="SQLTable.h" />
+    <ClInclude Include="SQLSchema.h" />
     <ClInclude Include="steamURlEditor.h" />
     <ClInclude Include="web_request.h" />
   </ItemGroup>

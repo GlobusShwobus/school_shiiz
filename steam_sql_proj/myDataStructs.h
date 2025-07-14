@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SQLTable.h"
+#include "SQLSchema.h"
 
 namespace ORDO {
 
@@ -13,9 +13,9 @@ namespace ORDO {
 		long long playerId = 0;
 		int playerLevel = 0;
 
-		SQLCommand         createTableCommand()const override;
-		SQLInsertOperation insertQuery()const override;
-		std::string_view   getTableName()const override;
+		sqlCommand             createTableCommand()const override;
+		sqlInsertOp            insertQuery()const override;
+		std::string_view       getTableName()const override;
 	};
 
 	class SteamGame : public SQLSchema {
@@ -26,9 +26,9 @@ namespace ORDO {
 		int gameID = 0;
 		int playTimeForever = 0;
 
-		SQLCommand         createTableCommand()const override;
-		SQLInsertOperation insertQuery()const override;
-		std::string_view   getTableName()const override;
+		sqlCommand             createTableCommand()const override;
+		sqlInsertOp            insertQuery()const override;
+		std::string_view       getTableName()const override;
 	};
 
 	class SteamActivity :public SQLSchema {
@@ -38,9 +38,9 @@ namespace ORDO {
 		int playtimeLastTwoWeeks = 0;
 		int playtimeForever = 0;
 
-		SQLCommand         createTableCommand()const override;
-		SQLInsertOperation insertQuery()const override;
-		std::string_view   getTableName()const override;
+		sqlCommand             createTableCommand()const override;
+		sqlInsertOp            insertQuery()const override;
+		std::string_view       getTableName()const override;
 	};
 
 
@@ -54,8 +54,8 @@ namespace ORDO {
 		double globalCompRate = 0;
 		bool isAchieved = 0;
 
-		SQLCommand         createTableCommand()const override;
-		SQLInsertOperation insertQuery()const override;
-		std::string_view   getTableName()const override;
+		sqlCommand             createTableCommand()const override;
+		sqlInsertOp            insertQuery()const override;
+		std::string_view       getTableName()const override;
 	};
 }

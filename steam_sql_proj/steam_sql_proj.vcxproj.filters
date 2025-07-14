@@ -82,7 +82,7 @@
     <ClInclude Include="NumberGenerator.h">
       <Filter>NumberGenerator</Filter>
     </ClInclude>
-    <ClInclude Include="SQLTable.h">
+    <ClInclude Include="SQLSchema.h">
       <Filter>sqlify</Filter>
     </ClInclude>
     <ClInclude Include="SQLUser.h">

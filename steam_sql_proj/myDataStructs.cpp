@@ -2,17 +2,17 @@
 
 namespace ORDO {
 
-	SQLSchema::SQLCommand SteamSummary::createTableCommand() const
+	sqlCommand SteamSummary::createTableCommand() const
 	{
 		static constexpr std::string_view table =
 			"CREATE TABLE summary (user_id BIGINT PRIMARY KEY, name VARCHAR(25), level INT, country_code VARCHAR(10), creation_date DATE, account_url VARCHAR(125)); ";
-		return SQLCommand(table);
+		return sqlCommand(table);
 	}
-	SQLSchema::SQLInsertOperation SteamSummary::insertQuery() const
+	sqlInsertOp SteamSummary::insertQuery() const
 	{
 		static constexpr std::string_view table =
 			"INSERT INTO summary (user_id, name, level, country_code, creation_date, account_url) VALUES (?,?,?,?,?,?);";
-		return SQLInsertOperation(table, [this](sql::PreparedStatement* stmt) {
+		return sqlInsertOp(table, [this](sql::PreparedStatement* stmt) {
 			stmt->setUInt64(1, playerId);
 			stmt->setString(2, name);
 			stmt->setInt(3, playerLevel);
@@ -28,17 +28,17 @@ namespace ORDO {
 	}
 
 
-	SQLSchema::SQLCommand SteamGame::createTableCommand() const
+	sqlCommand SteamGame::createTableCommand() const
 	{
 		static constexpr std::string_view table =
 			"CREATE TABLE games (game_id BIGINT PRIMARY KEY, name VARCHAR(75), game_version INT, total_playtime INT, last_played_date DATE); ";
-		return SQLCommand(table);
+		return sqlCommand(table);
 	}
-	SQLSchema::SQLInsertOperation SteamGame::insertQuery() const
+	sqlInsertOp SteamGame::insertQuery() const
 	{
 		static constexpr std::string_view table =
 			"INSERT INTO games (game_id, name, game_version, total_playtime, last_played_date) VALUES (?,?,?,?,?);";
-		return SQLInsertOperation(table, [this](sql::PreparedStatement* stmt) {
+		return sqlInsertOp(table, [this](sql::PreparedStatement* stmt) {
 			stmt->setUInt64(1, gameID);
 			stmt->setString(2, gameName);
 			stmt->setInt(3, gameVersion);
@@ -52,17 +52,17 @@ namespace ORDO {
 		return name;
 	}
 
-	SQLSchema::SQLCommand SteamActivity::createTableCommand() const
+	sqlCommand SteamActivity::createTableCommand() const
 	{
 		static constexpr std::string_view table =
 			"CREATE TABLE activity (game_id BIGINT PRIMARY KEY, name VARCHAR(75), total_playtime INT, playtime_fortnite INT); ";
-		return SQLCommand(table);
+		return sqlCommand(table);
 	}
-	SQLSchema::SQLInsertOperation SteamActivity::insertQuery() const
+	sqlInsertOp SteamActivity::insertQuery() const
 	{
 		static constexpr std::string_view table =
 			"INSERT INTO activity (game_id, name, total_playtime, playtime_fortnite) VALUES (?,?,?,?);";
-		return SQLInsertOperation(table, [this](sql::PreparedStatement* stmt) {
+		return sqlInsertOp(table, [this](sql::PreparedStatement* stmt) {
 			stmt->setUInt64(1, gameID);
 			stmt->setString(2, gameName);
 			stmt->setInt(3, playtimeForever);
@@ -76,17 +76,17 @@ namespace ORDO {
 	}
 
 
-	SQLSchema::SQLCommand SteamAchievements::createTableCommand() const
+	sqlCommand SteamAchievements::createTableCommand() const
 	{
 		static constexpr std::string_view table =
 			"CREATE TABLE achievements (game_id BIGINT, achievement_id VARCHAR(40), name VARCHAR(100), description VARCHAR(256), global_completion DECIMAL(5,2), is_achieved INTEGER, unlock_date DATE, PRIMARY KEY(game_id, achievement_id)); ";
-		return SQLCommand(table);
+		return sqlCommand(table);
 	}
-	SQLSchema::SQLInsertOperation SteamAchievements::insertQuery() const
+	sqlInsertOp SteamAchievements::insertQuery() const
 	{
 		static constexpr std::string_view table =
 			"INSERT INTO achievements (game_id, achievement_id, name, description, global_completion, is_achieved, unlock_date ) VALUES (?,?,?,?,?,?,?);";
-		return SQLInsertOperation(table, [this](sql::PreparedStatement* stmt) {
+		return sqlInsertOp(table, [this](sql::PreparedStatement* stmt) {
 			stmt->setUInt64(1, gameID);
 			stmt->setString(2, achievementID);
 			stmt->setString(3, achievementName);

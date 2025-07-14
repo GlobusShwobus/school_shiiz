@@ -32,26 +32,4 @@ namespace ORDO {
 
 		return true;
 	}
-	sql::Statement& SQLFlight::acquireStatement() {
-		if (!mConnect)
-			throw std::runtime_error("connection not established (getStatementAccess)");
-		if (!mStatement)
-			mStatement = std::unique_ptr<sql::Statement>(mConnect->createStatement());
-		return *mStatement;
-	}
-	bool SQLFlight::Insert(const SQLTable& table) {
-		if (!mConnect)
-			throw std::runtime_error("connection not established (Insert)");
-
-		try {
-			std::unique_ptr<sql::PreparedStatement> pstmt(mConnect->prepareStatement(table.createInsertStatement().data()));
-			table.bindToStatement(pstmt.get());
-			pstmt->executeUpdate();
-		}
-		catch (std::exception& expt) {//honestly everything can go wrong so idk type
-			SSQLStreamError = "Insert error: " + std::string(expt.what());
-			return false;
-		}
-		return true;
-	}
 }

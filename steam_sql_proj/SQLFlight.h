@@ -6,7 +6,7 @@
 #include <mysql_driver.h>              //for driver
 #include <cppconn/prepared_statement.h>//for prep statements
 
-#include "SQLTable.h"
+#include "SQLSchema.h"
 
 /*
 	CREATING A NEW SCHEMA OR ASSIGNIG TO EXISTING SCHEMA MUST PASS SOME SIMILAR QUERY TO THIS TO MAKE SURE SCHEMA NAME IS FREE/OR SCHEMA ALREADY EXISTS
@@ -30,9 +30,10 @@ namespace ORDO {
 
 	class SQLFlight {
 
-		sql::mysql::MySQL_Driver* mDriver = nullptr;
+		sql::mysql::MySQL_Driver*        mDriver = nullptr;
 		std::unique_ptr<sql::Connection> mConnect = nullptr;
-		std::unique_ptr<sql::Statement> mStatement = nullptr;
+		std::unique_ptr<sql::Statement>  mStatement = nullptr;
+		
 		bool mIsGood = false;
 		std::string SSQLStreamError;
 
@@ -57,7 +58,24 @@ namespace ORDO {
 		bool connect(std::string_view user, std::string_view password) {
 			return Connect(defaultLocalServer, user, password);
 		}
-		sql::Statement& acquireStatement();
+
+		void doCommand(sqlCommand command) {
+
+		}
+		void doPreparedInsert(sqlInsertOp op) {
+
+		}
+
+
+
+		//DEPRICATED
+		sql::Statement& acquireStatement() {
+			if (!mConnect)
+				throw std::runtime_error("connection not established (getStatementAccess)");
+			if (!mStatement)
+				mStatement = std::unique_ptr<sql::Statement>(mConnect->createStatement());
+			return *mStatement;
+		}
 		void CloseStatement() {
 			mStatement.release();
 		}
@@ -71,7 +89,22 @@ namespace ORDO {
 			}
 			return true;
 		}
-		bool Insert(const SQLTable& table);
+		bool Insert(const SQLTable& table) {
+			if (!mConnect)
+				throw std::runtime_error("connection not established (Insert)");
+
+			try {
+				std::unique_ptr<sql::PreparedStatement> pstmt(mConnect->prepareStatement(table.createInsertStatement().data()));
+				table.bindToStatement(pstmt.get());
+				pstmt->executeUpdate();
+			}
+			catch (std::exception& expt) {//honestly everything can go wrong so idk type
+				SSQLStreamError = "Insert error: " + std::string(expt.what());
+				return false;
+			}
+			return true;
+		}
+		//####################################
 
 		bool isGood()const {
 			return mIsGood;
