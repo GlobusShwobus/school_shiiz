@@ -4,7 +4,7 @@
 
 namespace ORDO {
 
-	class SteamSummary :public SQLTable {
+	class SteamSummary :public SQLSchema {
 	public:
 		std::string name;
 		std::string accountUrl;
@@ -13,15 +13,12 @@ namespace ORDO {
 		long long playerId = 0;
 		int playerLevel = 0;
 
-		SQLCommand createSchema()const override;
-		SQLCommand setSchema()const override;
-		SQLCommand createTable()const override;
-		SQLCommand insertData()const override;
-		std::string_view tableName()const override;
-		void bindToInsert(sql::PreparedStatement* stmt)const override;
+		SQLCommand         createTableCommand()const override;
+		SQLInsertOperation insertQuery()const override;
+		std::string_view   getTableName()const override;
 	};
 
-	class SteamGame : public SQLTable {
+	class SteamGame : public SQLSchema {
 	public:
 		std::string gameName;
 		std::string lastPlayedDate;
@@ -29,27 +26,25 @@ namespace ORDO {
 		int gameID = 0;
 		int playTimeForever = 0;
 
-		std::string_view tableName()const override;
-		std::string_view createTableStatement()const override;
-		std::string_view createInsertStatement()const override;
-		void bindToStatement(sql::PreparedStatement* stmt)const override;
+		SQLCommand         createTableCommand()const override;
+		SQLInsertOperation insertQuery()const override;
+		std::string_view   getTableName()const override;
 	};
 
-	class SteamActivity :public SQLTable {
+	class SteamActivity :public SQLSchema {
 	public:
 		std::string gameName;
 		int gameID = 0;
 		int playtimeLastTwoWeeks = 0;
 		int playtimeForever = 0;
 
-		std::string_view tableName()const override;
-		std::string_view createTableStatement()const override;
-		std::string_view createInsertStatement()const override;
-		void bindToStatement(sql::PreparedStatement* stmt)const override;
+		SQLCommand         createTableCommand()const override;
+		SQLInsertOperation insertQuery()const override;
+		std::string_view   getTableName()const override;
 	};
 
 
-	class SteamAchievements : public SQLTable {
+	class SteamAchievements : public SQLSchema {
 	public:
 		std::string achievementID;
 		std::string achievementName;
@@ -59,9 +54,8 @@ namespace ORDO {
 		double globalCompRate = 0;
 		bool isAchieved = 0;
 
-		std::string_view tableName()const override;
-		std::string_view createTableStatement()const override;
-		std::string_view createInsertStatement()const override;
-		void bindToStatement(sql::PreparedStatement* stmt)const override;
+		SQLCommand         createTableCommand()const override;
+		SQLInsertOperation insertQuery()const override;
+		std::string_view   getTableName()const override;
 	};
 }

@@ -4,26 +4,34 @@
 #include <functional>
 
 namespace ORDO {
-	class SQLTable {
+	class SQLSchema {
 	protected:
+
 		std::string schemaName;
 
 		struct SQLCommand {
 			std::string_view command;
+			SQLCommand(std::string_view) :command(command) {}
 		};
-		struct SQLInsertOp {
+		struct SQLInsertOperation {
 			std::string_view command;
-			std::function<void(sql::PreparedStatement*)>binder;
+			std::function<void(sql::PreparedStatement*)> binder;
 		};
 
 	public:
-		SQLTable(std::string_view schemaName):schemaName(schemaName) {}
+		SQLSchema(std::string_view schemaName):schemaName(schemaName) {}
 	
-		virtual SQLCommand createSchema()const = 0;
-		virtual SQLCommand setSchema()const = 0;
-		virtual SQLCommand createTable()const = 0;
-		virtual SQLInsertOp insertOperation()const = 0;
-		virtual std::string_view tableName()const = 0;
-		virtual ~SQLTable() = default;
+		void setSchemaName(std::string_view name)
+		{
+			schemaName = name;
+		}
+		SQLCommand                 createSchemaCommand()const {
+			return SQLCommand("CREATE DATABASE " + std::string(schemaName) + ';');
+		}
+		virtual SQLCommand         createTableCommand()const = 0;
+		virtual SQLInsertOperation insertQuery()const = 0;
+		virtual std::string_view   getTableName()const = 0;
+
+		virtual ~SQLSchema() = default;
 	};
 }

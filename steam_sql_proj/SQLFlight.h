@@ -8,8 +8,22 @@
 
 #include "SQLTable.h"
 
-//#include <mysql_connection.h>//for connection
-//#include <cppconn/driver.h>  //for connecting driver with connector
+/*
+	CREATING A NEW SCHEMA OR ASSIGNIG TO EXISTING SCHEMA MUST PASS SOME SIMILAR QUERY TO THIS TO MAKE SURE SCHEMA NAME IS FREE/OR SCHEMA ALREADY EXISTS
+	std::unique_ptr<std::vector<std::string>> DATABASE::GetSchemaList()const {
+		auto list = std::make_unique<std::vector<std::string>>();
+
+		std::unique_ptr<sql::Connection> conn(driver->connect(ip, server_name, server_password));
+		std::unique_ptr<sql::Statement>  stmt(conn->createStatement());
+		std::unique_ptr<sql::ResultSet>  results(stmt->executeQuery("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME NOT IN ('sys', 'performance_schema', 'information_schema', 'mysql');"));
+
+		while (results->next()) {
+			list->push_back(results->getString(1));
+		}
+
+		return list;
+	}
+*/
 
 namespace ORDO {
 
