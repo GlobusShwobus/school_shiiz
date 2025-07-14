@@ -13,10 +13,12 @@ namespace ORDO {
 		long long playerId = 0;
 		int playerLevel = 0;
 
+		SQLCommand createSchema()const override;
+		SQLCommand setSchema()const override;
+		SQLCommand createTable()const override;
+		SQLCommand insertData()const override;
 		std::string_view tableName()const override;
-		std::string_view createTableStatement()const override;
-		std::string_view createInsertStatement()const override;
-		void bindToStatement(sql::PreparedStatement* stmt)const override;
+		void bindToInsert(sql::PreparedStatement* stmt)const override;
 	};
 
 	class SteamGame : public SQLTable {
