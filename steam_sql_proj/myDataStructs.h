@@ -13,6 +13,7 @@ namespace ORDO {
 		long long playerId = 0;
 		int playerLevel = 0;
 
+		using SQLSchema::SQLSchema;
 		sqlCommand             createTableCommand()const override;
 		sqlInsertOp            insertQuery()const override;
 		std::string_view       getTableName()const override;
@@ -26,6 +27,7 @@ namespace ORDO {
 		int gameID = 0;
 		int playTimeForever = 0;
 
+		using SQLSchema::SQLSchema;
 		sqlCommand             createTableCommand()const override;
 		sqlInsertOp            insertQuery()const override;
 		std::string_view       getTableName()const override;
@@ -38,6 +40,7 @@ namespace ORDO {
 		int playtimeLastTwoWeeks = 0;
 		int playtimeForever = 0;
 
+		using SQLSchema::SQLSchema;
 		sqlCommand             createTableCommand()const override;
 		sqlInsertOp            insertQuery()const override;
 		std::string_view       getTableName()const override;
@@ -54,6 +57,7 @@ namespace ORDO {
 		double globalCompRate = 0;
 		bool isAchieved = 0;
 
+		using SQLSchema::SQLSchema;
 		sqlCommand             createTableCommand()const override;
 		sqlInsertOp            insertQuery()const override;
 		std::string_view       getTableName()const override;

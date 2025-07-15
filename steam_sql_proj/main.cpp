@@ -278,8 +278,11 @@ void teststeamUrlThing(){
  }
  //#########################################
 void testSQLFlightSystem() {
+
+    const std::string schemaName = GenerateRandomName("LANDING_");  //important diff, need to assign some name before, otherwise use setSchemaName
+
     SQLUser user;
-    SteamSummary summary;
+    SteamSummary summary(schemaName);
     SQLFlight flight;
 
     lazy::console_title();
@@ -309,13 +312,11 @@ void testSQLFlightSystem() {
     
     flight.connect(user.getIP(), user.getSName(), user.getSPassword());
     if (flight.isGood()) {
-        auto& statement = flight.acquireStatement();
-        const std::string schemaName = GenerateRandomName("LANDING_");
-        const std::string cmdStatement = "CREATE DATABASE " + schemaName + ";";
-        statement.execute(cmdStatement);
-        flight.setSchema(schemaName);
-        statement.execute(std::string(summary.createTableStatement()));
-        flight.Insert(summary);
+
+        flight.doCommand(summary.createSchemaCommand());
+        flight.setSchema(summary.getSchemaName());
+        flight.doCommand(summary.createTableCommand());
+        flight.doPreparedInsert(summary.insertQuery());
         std::cout << '\n' << "SUCCESS";
         lazy::console_wait();
     }

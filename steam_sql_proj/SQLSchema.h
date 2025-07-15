@@ -8,7 +8,6 @@ namespace ORDO {
 	namespace query {
 		struct SQLCommand {
 			std::string_view command;
-			SQLCommand(std::string_view command) :command(command) {}
 		};
 		struct SQLInsertOp {
 			std::string_view command;
@@ -26,16 +25,18 @@ namespace ORDO {
 		std::string schemaName;
 
 	public:
-
 		SQLSchema(std::string_view schemaName):schemaName(schemaName) {}
 	
 		void setSchemaName(std::string_view name)
 		{
 			schemaName = name;
 		}
+		std::string_view getSchemaName()const {
+			return schemaName;
+		}
 
 		sqlCommand                 createSchemaCommand()const {
-			return SQLCommand("CREATE DATABASE " + std::string(schemaName) + ';');
+			return sqlCommand("CREATE DATABASE " + std::string(schemaName) + ';');
 		}
 		virtual sqlCommand         createTableCommand()const = 0;
 		virtual sqlInsertOp        insertQuery()const = 0;

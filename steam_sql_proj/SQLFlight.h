@@ -32,7 +32,6 @@ namespace ORDO {
 
 		sql::mysql::MySQL_Driver*        mDriver = nullptr;
 		std::unique_ptr<sql::Connection> mConnect = nullptr;
-		std::unique_ptr<sql::Statement>  mStatement = nullptr;
 		
 		bool mIsGood = false;
 		std::string SSQLStreamError;
@@ -40,7 +39,10 @@ namespace ORDO {
 		static constexpr std::string_view defaultLocalServer = "tcp://127.0.0.1:3306";
 
 		bool Connect(std::string_view IP, std::string_view user, std::string_view password);
-
+		void ConnectionCheck() {
+			if (!mConnect)
+				throw std::runtime_error("Uninitalized connection");
+		}
 	public:
 		SQLFlight() = default;
 		SQLFlight(std::string_view IP, std::string_view user, std::string_view password)
@@ -59,57 +61,22 @@ namespace ORDO {
 			return Connect(defaultLocalServer, user, password);
 		}
 
-		void doCommand(sqlCommand command) {
+		bool setSchema(std::string_view name);
+		bool doCommand(const sqlCommand command);
+		bool doPreparedInsert(sqlInsertOp op);
 
-		}
-		void doPreparedInsert(sqlInsertOp op) {
-
-		}
-
-
-
-		//DEPRICATED
-		sql::Statement& acquireStatement() {
-			if (!mConnect)
-				throw std::runtime_error("connection not established (getStatementAccess)");
-			if (!mStatement)
-				mStatement = std::unique_ptr<sql::Statement>(mConnect->createStatement());
-			return *mStatement;
-		}
-		void CloseStatement() {
-			mStatement.release();
-		}
-		bool setSchema(std::string_view schema) {
-			try {
-				mConnect->setSchema(schema.data());
-			}
-			catch (sql::SQLException& expt) {
-				SSQLStreamError = "setSchema failure: " + std::string(expt.what());
-				return false;
-			}
-			return true;
-		}
-		bool Insert(const SQLTable& table) {
-			if (!mConnect)
-				throw std::runtime_error("connection not established (Insert)");
-
-			try {
-				std::unique_ptr<sql::PreparedStatement> pstmt(mConnect->prepareStatement(table.createInsertStatement().data()));
-				table.bindToStatement(pstmt.get());
-				pstmt->executeUpdate();
-			}
-			catch (std::exception& expt) {//honestly everything can go wrong so idk type
-				SSQLStreamError = "Insert error: " + std::string(expt.what());
-				return false;
-			}
-			return true;
-		}
-		//####################################
-
-		bool isGood()const {
+		bool isGood()const
+		{
 			return mIsGood;
 		}
-		std::string_view getStreamError()const {
+		void close() {
+			mConnect.release();
+			mDriver = nullptr;
+			mIsGood = false;
+			SSQLStreamError.clear();
+		}
+		std::string_view getStreamError()const
+		{
 			return SSQLStreamError;
 		}
 
