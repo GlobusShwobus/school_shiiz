@@ -40,7 +40,7 @@ namespace ORDO {
 		}
 		return true;
 	}
-	bool SQLFlight::doCommand(const sqlCommand command) {
+	bool SQLFlight::doCommand(const SQLCommand command) {
 		ConnectionCheck();
 
 		try {
@@ -54,7 +54,7 @@ namespace ORDO {
 
 		return true;
 	}
-	bool SQLFlight::doPreparedInsert(sqlInsertOp op) {
+	bool SQLFlight::doPreparedInsert(SQLInsertOp op) {
 		ConnectionCheck();
 
 		try {

@@ -27,8 +27,14 @@
 
 namespace ORDO {
 
-
 	class SQLFlight {
+
+	public:
+
+		using SQLCommand = SQLSchema::SQLCommand;
+		using SQLInsertOp = SQLSchema::SQLInsertOp;
+
+	private:
 
 		sql::mysql::MySQL_Driver*        mDriver = nullptr;
 		std::unique_ptr<sql::Connection> mConnect = nullptr;
@@ -43,6 +49,7 @@ namespace ORDO {
 			if (!mConnect)
 				throw std::runtime_error("Uninitalized connection");
 		}
+
 	public:
 		SQLFlight() = default;
 		SQLFlight(std::string_view IP, std::string_view user, std::string_view password)
@@ -62,8 +69,8 @@ namespace ORDO {
 		}
 
 		bool setSchema(std::string_view name);
-		bool doCommand(const sqlCommand command);
-		bool doPreparedInsert(sqlInsertOp op);
+		bool doCommand(const SQLCommand command);
+		bool doPreparedInsert(SQLInsertOp op);
 
 		bool isGood()const
 		{
@@ -79,13 +86,11 @@ namespace ORDO {
 		{
 			return SSQLStreamError;
 		}
-
-	public:
+	private:
 		//don't want these for streams
 		SQLFlight(const SQLFlight&) = delete;
 		SQLFlight(SQLFlight&&) = delete;
 		SQLFlight& operator=(const SQLFlight&) = delete;
 		SQLFlight& operator=(SQLFlight&&) = delete;
-
 	};
 }
