@@ -29,11 +29,6 @@ namespace ORDO {
 
 	class SQLFlight {
 
-	public:
-
-		using SQLCommand = SQLSchema::SQLCommand;
-		using SQLInsertOp = SQLSchema::SQLInsertOp;
-
 	private:
 
 		sql::mysql::MySQL_Driver*        mDriver = nullptr;

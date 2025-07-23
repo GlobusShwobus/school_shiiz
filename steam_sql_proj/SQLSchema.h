@@ -5,24 +5,22 @@
 
 namespace ORDO {
 
-	class SQLFlight;
-
-	class SQLSchema {
-
-		friend class SQLFlight;
-
-	protected:
-
-		std::string schemaName;
-
+	namespace query {
 		struct SQLCommand {
 			std::string command;
-			SQLCommand(std::string_view str) :command(str.data()) {}
 		};
 		struct SQLInsertOp {
 			std::string command;
 			std::function<void(sql::PreparedStatement*)> binder;
 		};
+	}
+
+	using SQLCommand = query::SQLCommand;
+	using SQLInsertOp = query::SQLInsertOp;
+
+	class SQLSchema {
+
+		std::string schemaName;
 
 	public:
 		SQLSchema(std::string_view schemaName) :schemaName(schemaName) {}
