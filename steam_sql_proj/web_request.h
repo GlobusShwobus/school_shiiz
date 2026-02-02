@@ -10,7 +10,7 @@ namespace badSQL
 {
 	//moshi moshi?
 	struct WebRequestHandle {
-		std::vector<char> data;
+		Sequence<char> data;
 		long httpcode = -1;
 		bool is_good = false;
 		std::string contentType;
@@ -24,11 +24,11 @@ namespace badSQL
 		auto* handle = static_cast<WebRequestHandle*>(clientp);
 		auto* bytes = static_cast<const char*>(content);
 
-		handle->data.insert(
-			handle->data.end(),
+		handle->data.insert_back(
 			bytes,
 			bytes + realSize
 		);
+
 		return realSize;
 	}
 

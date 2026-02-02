@@ -339,6 +339,15 @@ namespace badSQL
 			++mSize;
 		}
 
+		template<std::input_iterator It>
+		void insert_back(It first, It last)
+			requires std::constructible_from<value_type, std::iter_reference_t<It>>
+		{
+			for (; first != last; ++first)
+				emplace_back(*first);
+		}
+
+
 		//UB if the container is empty, otherwise erases the last element
 		constexpr void pop_back()noexcept
 		{

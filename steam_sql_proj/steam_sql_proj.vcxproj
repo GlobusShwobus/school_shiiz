@@ -149,7 +149,6 @@
     <ClCompile Include="NumberGenerator.cpp" />
     <ClCompile Include="SQLFlight.cpp" />
     <ClCompile Include="steamURLEditor.cpp" />
-    <ClCompile Include="web_request.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bad_concepts.h" />

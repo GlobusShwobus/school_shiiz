@@ -31,9 +31,6 @@
     <ClCompile Include="SQLFlight.cpp">
       <Filter>sqlify</Filter>
     </ClCompile>
-    <ClCompile Include="web_request.cpp">
-      <Filter>thisproj</Filter>
-    </ClCompile>
     <ClCompile Include="bad_exceptions.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
