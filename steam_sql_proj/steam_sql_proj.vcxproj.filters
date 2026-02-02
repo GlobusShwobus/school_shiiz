@@ -5,44 +5,22 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="logs">
-      <UniqueIdentifier>{ef571d5e-8a81-499b-b442-a92e99b1d2b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="inputs">
-      <UniqueIdentifier>{d2d43dde-1192-4c03-a31d-6e7a3df4787b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="myhelpers">
-      <UniqueIdentifier>{b8fa50aa-ab83-4147-82a3-9afa5660b3c5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="steam">
       <UniqueIdentifier>{96c545aa-fc8a-45cb-8357-9980899ff412}</UniqueIdentifier>
     </Filter>
     <Filter Include="sqlify">
       <UniqueIdentifier>{11e3b94a-4566-46a6-a924-a8ce97d85ed9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NumberGenerator">
-      <UniqueIdentifier>{0ec8653c-ecf2-4ee7-8f0f-49869c6885c7}</UniqueIdentifier>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{3243701f-7bf0-4fc3-8974-66ef6d65e84a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thisproj">
+      <UniqueIdentifier>{b6075953-f89b-4c0a-bc56-dc116e0bbff1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="logMessage.cpp">
-      <Filter>logs</Filter>
-    </ClCompile>
-    <ClCompile Include="Inputs.cpp">
-      <Filter>inputs</Filter>
-    </ClCompile>
-    <ClCompile Include="myhelpers.cpp">
-      <Filter>myhelpers</Filter>
-    </ClCompile>
-    <ClCompile Include="web_request.cpp">
-      <Filter>Resource Files</Filter>
     </ClCompile>
     <ClCompile Include="steamURLEditor.cpp">
       <Filter>steam</Filter>
@@ -50,26 +28,20 @@
     <ClCompile Include="myDataStructs.cpp">
       <Filter>sqlify</Filter>
     </ClCompile>
-    <ClCompile Include="NumberGenerator.cpp">
-      <Filter>NumberGenerator</Filter>
-    </ClCompile>
     <ClCompile Include="SQLFlight.cpp">
       <Filter>sqlify</Filter>
     </ClCompile>
+    <ClCompile Include="web_request.cpp">
+      <Filter>thisproj</Filter>
+    </ClCompile>
+    <ClCompile Include="bad_exceptions.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="NumberGenerator.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="logMessage.h">
-      <Filter>logs</Filter>
-    </ClInclude>
-    <ClInclude Include="Inputs.h">
-      <Filter>inputs</Filter>
-    </ClInclude>
-    <ClInclude Include="myhelpers.h">
-      <Filter>myhelpers</Filter>
-    </ClInclude>
-    <ClInclude Include="web_request.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
     <ClInclude Include="steamURlEditor.h">
       <Filter>steam</Filter>
     </ClInclude>
@@ -79,14 +51,35 @@
     <ClInclude Include="myDataStructs.h">
       <Filter>sqlify</Filter>
     </ClInclude>
-    <ClInclude Include="NumberGenerator.h">
-      <Filter>NumberGenerator</Filter>
-    </ClInclude>
     <ClInclude Include="SQLSchema.h">
       <Filter>sqlify</Filter>
     </ClInclude>
     <ClInclude Include="SQLUser.h">
       <Filter>sqlify</Filter>
+    </ClInclude>
+    <ClInclude Include="Stuff.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Sequence.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="NumberGenerator.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="bad_concepts.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="bad_utility.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="bad_exceptions.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="web_request.h">
+      <Filter>thisproj</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

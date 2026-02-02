@@ -1,58 +1,39 @@
-#include "myhelpers.h"
-#include <windows.h>
+#pragma once
+
 #include <iostream>
-#include <iomanip>
+#include <string>
+#include <span>
 #include <chrono>
 #include <format>
-namespace ORDO {
+
+
+namespace badSQL
+{
+
 	namespace lazy {
-        void RemoveSymbols(std::string& from, const std::string& symbols) {
+        //not confirmed functions (subject to refactoring/removing)
+        void remove_symbols(std::string& from, std::string symbols) {
             from.erase(std::remove_if(from.begin(), from.end(), [&symbols](const char c) {
                 return symbols.find(c) != std::string::npos;
                 }), from.end());
         }
-        void RemoveSymbols(std::string& from, const char symbol) {
+        void remove_symbols(std::string& from, const char symbol) {
             from.erase(std::remove_if(from.begin(), from.end(), [symbol](const char c) {
                 return symbol == c;
                 }), from.end());
         }
-        void PrintList(const std::vector<std::pair<std::string, std::string>>& list) {
-            size_t i = 1;
-            for (const auto& each : list) {
-                std::cout << std::setw(5) << i++ << " " << each.second << "\n";
-            }
+
+        void print_list(std::span<const std::string> list, std::size_t starting_index = 0) {
+            for (const auto& str : list)
+                std::cout << '[' << starting_index++ << "] " << str << '\n';
         }
-        bool ListContains(const std::vector<std::string>& list, const std::string& lookFor) {
-            return std::find(list.begin(), list.end(), lookFor) != list.end();
-        }
+
         const std::string UnixTime(time_t unix_timestamp) {
             std::chrono::system_clock::time_point tp = std::chrono::system_clock::from_time_t(unix_timestamp);
             return std::format("{:%Y-%m-%d %H:%M:%S}", std::chrono::floor<std::chrono::seconds>(tp));
         }
-        std::string GetClipboard() {
-            if (!OpenClipboard(nullptr)) {
-                return "";
-            }
-            HANDLE hData = GetClipboardData(CF_TEXT);
-            if (hData == nullptr) {
-                CloseClipboard();
-                return "";
-            }
 
-            char* copy_stream = static_cast<char*>(GlobalLock(hData));//do not delete OR MEMES
-            std::string text;
-
-            if (copy_stream) {
-                text = copy_stream;
-            }
-
-            GlobalUnlock(hData);
-            CloseClipboard();
-
-            return text;
-        }
-
-
+        //confirmed functions
 
         void console_wait() {
             if (std::cin.rdbuf()->in_avail() > 0)
@@ -60,6 +41,7 @@ namespace ORDO {
             std::cout << "Press Enter to continue...";
             std::cin.get();
         }
+
         void console_title() {
             static constexpr std::string_view title =
                 R"(/'\_/`\ _
@@ -72,10 +54,16 @@ namespace ORDO {
                 "#######################################################################";
             std::cout << title << '\n' << padding << '\n';
         }
+
         void console_clear() {
             system("cls");
         }
 
-
+        std::string input() {
+            std::string str;
+            std::getline(std::cin, str);
+            return str;
+        }
 	}
+
 }

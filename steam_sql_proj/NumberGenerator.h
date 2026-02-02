@@ -3,14 +3,19 @@
 #include <random>
 #include <memory>
 
-namespace ORDO {
-	class NumberGenerator {
-		std::unique_ptr<std::mt19937> rng;
-
+namespace badSQL
+{
+	class RandomNum final
+	{
 	public:
-		NumberGenerator();
-		int getRandInt(int min, int max);
-		float getRandFloat(float min, float max);
+
+		RandomNum();
+
+		int rInt(int min, int max)const noexcept;
+
+		float rFloat(float min, float max)const noexcept;
+
+	private:
+		std::unique_ptr<std::mt19937> rng;
 	};
 }
-

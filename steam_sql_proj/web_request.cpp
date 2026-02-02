@@ -2,10 +2,10 @@
 #include <fstream>
 #include <curl/curl.h>
 
-namespace ORDO {
-	size_t Request::callBack(void* contents, size_t size, size_t nmemb, void* userp) {
+namespace badSQL {
+	size_t Request::callBack(void* contents, size_t size, size_t nmemb, void* clientp) {
 		size_t realSize = size * nmemb;
-		ResoponseBuffer* buffer = static_cast<ResoponseBuffer*>(userp);
+		ResoponseBuffer* buffer = static_cast<ResoponseBuffer*>(clientp);
 		char* begin = static_cast<char*>(contents);
 		buffer->data.insert(buffer->data.end(), begin, begin + realSize);
 		return realSize;
@@ -46,30 +46,6 @@ namespace ORDO {
 		if (extraInfo)
 			*extraInfo = "success";
 		return true;
-	}
-	bool Request::setLoicence(std::string_view filePath, std::string* extraInfo) {
-		bool result = false;
-
-		std::ifstream file(filePath.data());
-
-		if (file.good()) {
-			loicense = filePath;
-			result = true;
-
-			if (extraInfo) {
-				*extraInfo = "file path established with >> " + std::string(filePath);
-			}
-
-		}
-		else {
-			loicense.clear();
-			if (extraInfo) {
-				*extraInfo = "UNABLE TO DETERMINE PATH TO CERTIFICATE";
-			}
-		}
-		file.close();
-
-		return result;
 	}
 
 	std::unique_ptr<Request::ResoponseBuffer> Request::request(std::string_view url, std::string* extraInfo)
