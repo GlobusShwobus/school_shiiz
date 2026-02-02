@@ -8,6 +8,7 @@
 
 namespace badSQL 
 {
+	//moshi moshi?
 	struct WebRequestHandle {
 		std::vector<char> data;
 		long httpcode = -1;
