@@ -5,9 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="steam">
-      <UniqueIdentifier>{96c545aa-fc8a-45cb-8357-9980899ff412}</UniqueIdentifier>
-    </Filter>
     <Filter Include="sqlify">
       <UniqueIdentifier>{11e3b94a-4566-46a6-a924-a8ce97d85ed9}</UniqueIdentifier>
     </Filter>
@@ -22,9 +19,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="steamURLEditor.cpp">
-      <Filter>steam</Filter>
-    </ClCompile>
     <ClCompile Include="myDataStructs.cpp">
       <Filter>sqlify</Filter>
     </ClCompile>
@@ -37,11 +31,11 @@
     <ClCompile Include="NumberGenerator.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
+    <ClCompile Include="steamURLEditor.cpp">
+      <Filter>thisproj</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="steamURlEditor.h">
-      <Filter>steam</Filter>
-    </ClInclude>
     <ClInclude Include="SQLFlight.h">
       <Filter>sqlify</Filter>
     </ClInclude>
@@ -76,6 +70,12 @@
       <Filter>Misc</Filter>
     </ClInclude>
     <ClInclude Include="web_request.h">
+      <Filter>thisproj</Filter>
+    </ClInclude>
+    <ClInclude Include="steamURlEditor.h">
+      <Filter>thisproj</Filter>
+    </ClInclude>
+    <ClInclude Include="user.h">
       <Filter>thisproj</Filter>
     </ClInclude>
   </ItemGroup>

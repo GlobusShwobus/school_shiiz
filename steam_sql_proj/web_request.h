@@ -6,7 +6,7 @@
 
 #include <curl/curl.h>
 
-namespace badSQL 
+namespace badSQL
 {
 	//moshi moshi?
 	struct WebRequestHandle {
@@ -54,44 +54,54 @@ namespace badSQL
 		return response == CURLE_OK || response == CURLE_COULDNT_CONNECT;
 	}
 
-
 	WebRequestHandle request_data(std::string url, std::string certificate)
 	{
 		WebRequestHandle handle;
-		CURL* curl;
-		CURLcode result;
+		auto& logger = Logger::instance();
 
-		curl = curl_easy_init();
+		CURL* curl = curl_easy_init();
 
-		if (curl == NULL) {
-			//if (extraInfo)
-			//	*extraInfo = "libcurl failed to initalize";
-			return false;
+		if (!curl) {
+			logger.add_error("failed to init libcurl");
+			return handle;
 		}
-		curl_easy_setopt(curl, CURLOPT_URL, url.data());//fuck my ass, insert url as string -> get wider asshole (good i commented this)
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, call_back);
-		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &handle);
 
-		curl_easy_setopt(curl, CURLOPT_CAINFO, certificate.c_str());
+		struct CurlCleanup {
+			CURL* c;
+			~CurlCleanup() {
+				curl_easy_cleanup(c);
+			}
+		}cleanup{ curl };
 
-		result = curl_easy_perform(curl);
 
-		if (result != CURLE_OK) {
-			curl_easy_cleanup(curl);
-			//if (extraInfo)
-			//	*extraInfo = "Libcurl err: " + std::string(curl_easy_strerror(result));
-			return false;
+		auto setopt = [&](CURLoption opt, auto value) {
+			CURLcode rc = curl_easy_setopt(curl, opt, value);
+			if (rc != CURLE_OK) {
+				logger.add_error(std::string("curl_easy_setopt fail ") + curl_easy_strerror(rc));
+				return false;
+			}
+			return true;
+			};
+
+		if (!setopt(CURLOPT_URL, url.c_str()) ||//might brick of not url.data(), infact expected...
+			!setopt(CURLOPT_WRITEFUNCTION, call_back) ||
+			!setopt(CURLOPT_WRITEDATA, &handle) ||
+			!setopt(CURLOPT_CAINFO, certificate.c_str()))
+		{
+			return handle;
 		}
-		curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, reciever.httpcode);
-		char* content_type = nullptr;
-		curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &content_type);
-		if (content_type)
-			reciever.contentType = content_type;
 
-		curl_easy_cleanup(curl);
-		reciever.isSuccess = true;
-		//if (extraInfo)
-		//	*extraInfo = "success";
+		CURLcode rc = curl_easy_perform(curl);
+
+		if (rc != CURLE_OK) {
+			logger.add_error(std::string("curl_easy_perform failed: ") + curl_easy_strerror(rc));
+			return handle;
+		}
+
+		handle.is_good = true;
+
+		curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &handle.httpcode);
+		curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &handle.contentType);
 
 		return handle;
 	}

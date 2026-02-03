@@ -163,6 +163,7 @@
     <ClInclude Include="SQLUser.h" />
     <ClInclude Include="SQLSchema.h" />
     <ClInclude Include="steamURlEditor.h" />
+    <ClInclude Include="user.h" />
     <ClInclude Include="web_request.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

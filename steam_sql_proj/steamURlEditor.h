@@ -1,60 +1,89 @@
 #pragma once
+
+#include <format>
 #include <string>
 #include <string_view>
 
-namespace ORDO {
+namespace badSQL {
 
-	enum class SAPI_FUNCTIONS {
-		SUMMARY,
-		GAMES,
-		RECENTLY_PLAYED,
-		ACHIEVEMENTS_PLAYER,
-		ACHIEVEMENTS_GLOBAL,
-		ACHIEVEMENTS_SCHEMA
-	};
+	static constexpr std::string_view achievement_schema_base =
+		"http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/";
 
-	class SteamURLEditor {
-		
-		std::string apiKey;
-		std::string userId;
+	static constexpr std::string_view achievement_globalinfo_base =
+		"https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002/";
 
-	public:
-		SteamURLEditor() = default;
-		SteamURLEditor(std::string_view apiKey, std::string_view userId) :apiKey(apiKey), userId(userId) {}
+	static constexpr std::string_view achievement_playerinfo_base =
+		"http://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/";
 
-		void setSteamAPIKey(std::string_view str);
-		void setSteamUserID(std::string_view str);
-		std::string_view getAPIKey()const;
-		std::string_view getUserID()const;
+	static constexpr std::string_view player_summary_base =
+		"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/";
 
-		// TODO: for get_API_URL edit extraInfo error message from a single place...
-		std::string get_API_URL(const SAPI_FUNCTIONS type, std::string* extraInfo = nullptr);
-		std::string get_API_URL(const SAPI_FUNCTIONS type, std::string_view gameId, std::string* extraInfo = nullptr);
+	static constexpr std::string_view player_owned_games_base =
+		"https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/";
+
+	static constexpr std::string_view player_recent_activity_base =
+		"https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/";
 
 
-	private:
-		std::string getTemplateUrl(const SAPI_FUNCTIONS type)const;
-		bool insertAPIKey(std::string& templateUrl)const;
-		bool insertUserID(std::string& templateUrl)const;
-		bool insertGameId(std::string& templateUrl, std::string_view gameId)const;
+	std::string make_achievement_schema_url(std::string_view key, std::string_view appid)
+	{
+		return std::format(
+			"{}?key={}?appid={}&l=en",
+			achievement_schema_base,
+			key,
+			appid
+		);
+	}
 
-		bool findInsertionPoint(std::string_view templateUrl, std::string_view lookFor, size_t& pos)const;
+	std::string make_achievement_globalinfo_url(std::string_view appid)
+	{
+		return std::format("{}?gameid={}&format=json",
+			achievement_globalinfo_base,
+			appid);
+	}
 
-		static constexpr std::string_view urlT_achievement_schema = "http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=&appid=&l=en";//only if need some logo urls, otherwise worse than player in every way
-		static constexpr std::string_view urlT_achievement_global = "https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002/?gameid=&format=json";//only good for global % completion
-		static constexpr std::string_view urlT_achievement_player = "http://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key=&steamid=&appid=&l=en";//this one is better than schema, use this
-		static constexpr std::string_view urlT_summary            = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=&steamids=&format=json";
-		static constexpr std::string_view urlT_games              = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=&steamid=&include_appinfo=true&include_played_free_games=true&format=json";//get game ids from here
-		static constexpr std::string_view urlT_recently_played    = "https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=&steamid=&format=json";
+	std::string make_achievement_playerinfo_url(std::string_view key, std::string_view steamid, std::string_view appid)
+	{
+		return std::format(
+			"{}?key={}&steamid={}&appid={}&l=en",
+			achievement_playerinfo_base,
+			key,
+			steamid,
+			appid
+		);
+	}
 
-		static constexpr std::string_view urlT_userSteamLevel     = "http://api.steampowered.com/IPlayerService/GetSteamLevel/v1/?key=&steamid=";//use this for steam level
-		static constexpr std::string_view urlT_userSteamBadges    = "http://api.steampowered.com/IPlayerService/GetBadges/v1/?key=&steamid=";//also steam level, but no use for other data in current scope, not bad tho
-	};
+	std::string make_player_summary_url(std::string_view key, std::string_view steamid)
+	{
+		return std::format(
+			"{}?key={}&steamids={}&format=json",
+			player_summary_base,
+			key,
+			steamid
+		);
+	}
+
+	std::string make_player_owned_games_url(std::string_view key, std::string_view steamid)
+	{
+		return std::format(
+			"{}?key={}&steamid={}&include_appinfo=true&include_played_free_games=true&format=json",
+			player_owned_games_base,
+			key,
+			steamid
+		);
+	}
+
+	std::string make_player_recent_activity_url(std::string_view key, std::string_view steamid)
+	{
+		return std::format(
+		"{}?key={}&steamid={}&format=json",
+			player_recent_activity_base,
+			key,
+			steamid
+		);
+	}
 
 
-
-
-	//why do i need this????
-	std::string SAPItoString(const SAPI_FUNCTIONS t);
-
+	static constexpr std::string_view urlT_userSteamLevel = "http://api.steampowered.com/IPlayerService/GetSteamLevel/v1/?key=&steamid=";//use this for steam level
+	static constexpr std::string_view urlT_userSteamBadges = "http://api.steampowered.com/IPlayerService/GetBadges/v1/?key=&steamid=";//also steam level, but no use for other data in current scope, not bad tho
 }
