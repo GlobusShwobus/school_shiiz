@@ -17,7 +17,7 @@ namespace badSQL
 	};
 
 
-	std::size_t call_back(void* content, std::size_t size, std::size_t nmemb, void* clientp)
+	static std::size_t call_back(void* content, std::size_t size, std::size_t nmemb, void* clientp)
 	{
 		size_t realSize = size * nmemb;
 

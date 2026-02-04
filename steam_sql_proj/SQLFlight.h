@@ -1,12 +1,10 @@
 #pragma once
 
 #include <string>
-#include <string_view>
-#include <memory>
+#include "bad_exceptions.h"
 #include <mysql_driver.h>              //for driver
 #include <cppconn/prepared_statement.h>//for prep statements
 
-#include "SQLSchema.h"
 
 /*
 	CREATING A NEW SCHEMA OR ASSIGNIG TO EXISTING SCHEMA MUST PASS SOME SIMILAR QUERY TO THIS TO MAKE SURE SCHEMA NAME IS FREE/OR SCHEMA ALREADY EXISTS
@@ -25,67 +23,85 @@
 	}
 */
 
-namespace ORDO {
+namespace badSQL {
 
-	class SQLFlight {
 
-	private:
-
-		sql::mysql::MySQL_Driver*        mDriver = nullptr;
-		std::unique_ptr<sql::Connection> mConnect = nullptr;
-		
-		bool mIsGood = false;
-		std::string SSQLStreamError;
-
-		static constexpr std::string_view defaultLocalServer = "tcp://127.0.0.1:3306";
-
-		bool Connect(std::string_view IP, std::string_view user, std::string_view password);
-		void ConnectionCheck() {
-			if (!mConnect)
-				throw std::runtime_error("Uninitalized connection");
+	std::string translate_sql_error_to_peepo_language(const sql::SQLException& e, const std::string& service)
+	{
+		switch (e.getErrorCode()) {
+		case 2005:
+			return "Invalid host [" + service + "]";
+		case 2002: 
+		case 2003: 
+			return "Server unreachable [" + service + "]";
+		case 1045: 
+			return "Invalid username or password";
+		case 1049: 
+			return "Database does not exist";
+		case 1044:
+			return "Perimission denied";
 		}
+
+
+		const std::string& state = e.getSQLState();
+		if (state.rfind("08", 0) == 0)
+			return "Network error while connecting to [" + service + "]";
+
+		if (state == "HYT00" || state == "HYT01")
+			return "Connection timed out [" + service + "]";
+
+		return "Failed to connect to [" + service + "]";//default
+	}
+
+	class DBConnect 
+	{
 
 	public:
-		SQLFlight() = default;
-		SQLFlight(std::string_view IP, std::string_view user, std::string_view password)
+
+		DBConnect(const std::string& user, const std::string& password, const std::string& service = "tcp://127.0.0.1:3306")
+			:service(service), user(user), password(password)
 		{
-			Connect(IP, user, password);
-		}
-		SQLFlight(std::string_view user, std::string_view password)
-		{
-			Connect(defaultLocalServer, user, password);
+			connect(user, password, service);
 		}
 
-		bool connect(std::string_view IP, std::string_view user, std::string_view password) {
-			return Connect(IP, user, password);
+
+		void connect(const std::string& user, const std::string& password, const std::string& service)
+		{
+			close();
+
+			try {
+				mDriver = sql::mysql::get_driver_instance();
+				mConnect.reset(mDriver->connect(service, user, password));
+			}
+			catch (const sql::SQLException& e) {
+				mConnect.release();
+				mDriver = nullptr;
+
+				throw BadException(translate_sql_error_to_peepo_language(e, service).c_str());
+			}
 		}
-		bool connect(std::string_view user, std::string_view password) {
-			return Connect(defaultLocalServer, user, password);
-		}
+
 
 		bool setSchema(std::string_view name);
 		bool doCommand(const SQLCommand command);
 		bool doPreparedInsert(SQLInsertOp op);
 
-		bool isGood()const
+		void close()
 		{
-			return mIsGood;
-		}
-		void close() {
 			mConnect.release();
 			mDriver = nullptr;
-			mIsGood = false;
-			SSQLStreamError.clear();
+			service.clear();
+			user.clear();
+			password.clear();
 		}
-		std::string_view getStreamError()const
-		{
-			return SSQLStreamError;
-		}
+
 	private:
-		//don't want these for streams
-		SQLFlight(const SQLFlight&) = delete;
-		SQLFlight(SQLFlight&&) = delete;
-		SQLFlight& operator=(const SQLFlight&) = delete;
-		SQLFlight& operator=(SQLFlight&&) = delete;
+		sql::mysql::MySQL_Driver* mDriver = nullptr;
+		std::unique_ptr<sql::Connection> mConnect = nullptr;
+
+
+		std::string service;
+		std::string user;
+		std::string password;
 	};
 }
