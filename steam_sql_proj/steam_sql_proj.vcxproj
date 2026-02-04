@@ -152,7 +152,6 @@
     <ClInclude Include="bad_concepts.h" />
     <ClInclude Include="bad_exceptions.h" />
     <ClInclude Include="bad_utility.h" />
-    <ClInclude Include="sql_commands.h" />
     <ClInclude Include="Stuff.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="NumberGenerator.h" />

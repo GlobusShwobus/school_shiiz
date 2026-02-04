@@ -30,9 +30,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="sql_commands.h">
-      <Filter>sqlify</Filter>
-    </ClInclude>
     <ClInclude Include="SQLSchema.h">
       <Filter>sqlify</Filter>
     </ClInclude>
