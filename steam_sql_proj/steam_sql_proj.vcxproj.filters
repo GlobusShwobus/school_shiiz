@@ -5,9 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="sqlify">
-      <UniqueIdentifier>{11e3b94a-4566-46a6-a924-a8ce97d85ed9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Misc">
       <UniqueIdentifier>{3243701f-7bf0-4fc3-8974-66ef6d65e84a}</UniqueIdentifier>
     </Filter>
@@ -30,9 +27,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SQLSchema.h">
-      <Filter>sqlify</Filter>
-    </ClInclude>
     <ClInclude Include="Sequence.h">
       <Filter>Misc</Filter>
     </ClInclude>
@@ -65,6 +59,9 @@
     </ClInclude>
     <ClInclude Include="SQLFlight.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sql_command.h">
+      <Filter>thisproj</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

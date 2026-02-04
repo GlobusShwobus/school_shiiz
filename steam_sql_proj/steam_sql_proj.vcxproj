@@ -157,7 +157,7 @@
     <ClInclude Include="NumberGenerator.h" />
     <ClInclude Include="Sequence.h" />
     <ClInclude Include="SQLFlight.h" />
-    <ClInclude Include="SQLSchema.h" />
+    <ClInclude Include="sql_command.h" />
     <ClInclude Include="make_url.h" />
     <ClInclude Include="user.h" />
     <ClInclude Include="web_request.h" />
