@@ -19,40 +19,22 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="myDataStructs.cpp">
-      <Filter>sqlify</Filter>
-    </ClCompile>
-    <ClCompile Include="SQLFlight.cpp">
-      <Filter>sqlify</Filter>
-    </ClCompile>
     <ClCompile Include="bad_exceptions.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
     <ClCompile Include="NumberGenerator.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
-    <ClCompile Include="steamURLEditor.cpp">
-      <Filter>thisproj</Filter>
+    <ClCompile Include="SQLFlight.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SQLFlight.h">
-      <Filter>sqlify</Filter>
-    </ClInclude>
-    <ClInclude Include="myDataStructs.h">
+    <ClInclude Include="sql_commands.h">
       <Filter>sqlify</Filter>
     </ClInclude>
     <ClInclude Include="SQLSchema.h">
       <Filter>sqlify</Filter>
-    </ClInclude>
-    <ClInclude Include="SQLUser.h">
-      <Filter>sqlify</Filter>
-    </ClInclude>
-    <ClInclude Include="Stuff.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="Logger.h">
-      <Filter>Misc</Filter>
     </ClInclude>
     <ClInclude Include="Sequence.h">
       <Filter>Misc</Filter>
@@ -72,11 +54,20 @@
     <ClInclude Include="web_request.h">
       <Filter>thisproj</Filter>
     </ClInclude>
-    <ClInclude Include="steamURlEditor.h">
+    <ClInclude Include="make_url.h">
       <Filter>thisproj</Filter>
     </ClInclude>
     <ClInclude Include="user.h">
       <Filter>thisproj</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>thisproj</Filter>
+    </ClInclude>
+    <ClInclude Include="Stuff.h">
+      <Filter>thisproj</Filter>
+    </ClInclude>
+    <ClInclude Include="SQLFlight.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

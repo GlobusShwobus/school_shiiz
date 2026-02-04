@@ -10,4 +10,10 @@ namespace badSQL
 		std::string steam_id;
 	};
 
+	/*
+			std::string serverIP;
+			std::string serverName;
+			std::string serverPassword;
+	*/
+
 }
