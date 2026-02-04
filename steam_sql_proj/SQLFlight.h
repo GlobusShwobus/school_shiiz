@@ -26,7 +26,7 @@
 namespace badSQL {
 
 
-	std::string translate_sql_error_to_peepo_language(const sql::SQLException& e, const std::string& service)
+	std::string translate_connection_throw_message_to_peepo(const sql::SQLException& e, const std::string& service)
 	{
 		switch (e.getErrorCode()) {
 		case 2005:
@@ -77,7 +77,7 @@ namespace badSQL {
 				mConnect.release();
 				mDriver = nullptr;
 
-				throw BadException(translate_sql_error_to_peepo_language(e, service).c_str());
+				throw BadException(translate_connection_throw_message_to_peepo(e, service).c_str());
 			}
 		}
 
