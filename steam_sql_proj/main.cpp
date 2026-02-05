@@ -10,8 +10,8 @@
 #include "json.hpp"
 
 
-#include "SQLFlight.h"
-
+#include "SQLConnect.h"
+#include <vector>
 
 
 
@@ -74,7 +74,7 @@ void test123() {
 
     DBConnect sqlcon;
     
-    std::cout << sqlcon.connect() << '\n';
+    std::cout << sqlcon.connect("root", "", "tcp://127.0.0.1:3306") << '\n';
 
     std::string do_db_command = create_database_command("bill_clinton");
     std::cout << sqlcon.do_simple_command(do_db_command);
@@ -87,7 +87,16 @@ void test123() {
     player_summary_info info(
     "albert","meme123","geb","2025-02-05",123123,69
     );
-    std::cout << sqlcon.do_prepared_statement(insert_table_command, info, bind_player_summary_info);
+
+    Sequence<player_summary_info> infos = {
+        {  "albert","meme1234","geb","2025-02-05",455425,420},
+        {  "anna","meme1235","geb","2024-02-05",1231246363,69},
+        {  "mihkel;","meme1236","geb","2023-02-05",23546536,42069},
+        {  "yoyo","meme1273","geb","2022-02-05",2345625762,123}
+    };
+
+
+    std::cout << sqlcon.do_prepared_statement(insert_table_command, std::span<const player_summary_info>(infos), bind_player_summary_info);
 
 }
 

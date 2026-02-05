@@ -54,10 +54,10 @@
     <ClInclude Include="Stuff.h">
       <Filter>thisproj</Filter>
     </ClInclude>
-    <ClInclude Include="SQLFlight.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="sql_command.h">
+      <Filter>thisproj</Filter>
+    </ClInclude>
+    <ClInclude Include="SQLConnect.h">
       <Filter>thisproj</Filter>
     </ClInclude>
   </ItemGroup>

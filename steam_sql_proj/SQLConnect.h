@@ -4,6 +4,7 @@
 #include "bad_exceptions.h"
 #include <mysql_driver.h>              //for driver
 #include <cppconn/prepared_statement.h>//for prep statements
+#include <span>
 #include "Logger.h"
 
 
@@ -144,13 +145,13 @@ namespace badSQL {
 			return responce;
 		}
 
-		template<typename T, typename Binder>//TODO:: a good way to harden binder, not using poly. template allows for customs
+		//TODO:: a good way to harden binder, not using poly. template allows for customs
+		template<typename T, typename Binder>
 		std::string do_prepared_statement(const std::string& statement, const T& info, Binder&& binder)
 		{
 			auto& logger = Logger::instance();
-			std::unique_ptr<sql::PreparedStatement> pstmt;
 			std::string responce = "Success";
-
+		
 			try {
 				std::unique_ptr<sql::PreparedStatement> pstmt(mConnect->prepareStatement(statement));
 				binder(pstmt.get(), info);
@@ -161,6 +162,43 @@ namespace badSQL {
 				logger.add_error(responce);
 			}
 			
+			return responce;
+		}
+		//TODO:: a good way to harden binder, not using poly. template allows for customs
+		//TODO2:: reseach if on a failure stop entierly or go to the next entry
+		//TODO3:: a better way??? turn off auto commit -> prep statement - > commit -> reset auto commit
+		//TODO4:: conflicts with the other overload when tempalte type deduction fails
+		template<typename T, typename Binder>
+		std::string do_prepared_statement(const std::string& statement,  std::span<const T> infos, Binder&& binder)
+		{
+			auto& logger = Logger::instance();
+			std::string responce = "Success";
+			bool autoCommitOriginal = true;
+
+
+			try {
+				//disable auto commit
+				auto connector = mConnect.get();
+				autoCommitOriginal = connector->getAutoCommit();
+				connector->setAutoCommit(false);
+				//prep statement
+				std::unique_ptr<sql::PreparedStatement> pstmt(mConnect->prepareStatement(statement));
+				//batch bind
+				for (const T& info : infos) {
+					binder(pstmt.get(), info);
+					pstmt->executeUpdate();
+				}
+
+				//commit and reset
+				mConnect->commit();
+				mConnect->setAutoCommit(autoCommitOriginal);
+			}
+			catch (const sql::SQLException& e) {
+				mConnect->rollback();
+				responce = translate_sql_throw_message_to_peepo_table(e);
+				logger.add_error(responce);
+			}
+
 			return responce;
 		}
 
