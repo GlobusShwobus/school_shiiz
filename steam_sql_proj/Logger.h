@@ -23,17 +23,17 @@ namespace badSQL
 		}
 
 		// add some info
-		void add_log(std::string message) 
+		void add_log(std::string_view message) 
 		{
 			std::lock_guard<std::mutex> lock(mMutex);
-			mLogs.push_back(std::move(message));
+			mLogs.emplace_back(message);
 		}
 
 		// add an error
-		void add_error(std::string error)
+		void add_error(std::string_view error)
 		{
 			std::lock_guard<std::mutex> lock(mMutex);
-			mErrors.push_back(std::move(error));
+			mErrors.emplace_back(error);
 		}
 
 		std::span<const std::string> get_logs()const
@@ -49,13 +49,13 @@ namespace badSQL
 		// return last entry. may return nullptr
 		std::string_view last_log()const
 		{
-			return mLogs.isEmpty() ? nullptr : mLogs.back();
+			return mLogs.isEmpty() ? "" : mLogs.back();
 		}
 
-		// return last entry. may return nullptr
+		// return last entry
 		std::string_view last_error()const
 		{
-			return mErrors.isEmpty() ? nullptr : mErrors.back();
+			return mErrors.isEmpty() ? "" : mErrors.back();
 		}
 
 	private:

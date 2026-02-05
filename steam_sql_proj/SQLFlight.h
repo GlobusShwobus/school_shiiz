@@ -4,63 +4,103 @@
 #include "bad_exceptions.h"
 #include <mysql_driver.h>              //for driver
 #include <cppconn/prepared_statement.h>//for prep statements
+#include "Logger.h"
+
 
 /*
 check validity before doing commands is either connection.isValid or ping()
 */
 
 /*
-	CREATING A NEW SCHEMA OR ASSIGNIG TO EXISTING SCHEMA MUST PASS SOME SIMILAR QUERY TO THIS TO MAKE SURE SCHEMA NAME IS FREE/OR SCHEMA ALREADY EXISTS
-	std::unique_ptr<std::vector<std::string>> DATABASE::GetSchemaList()const {
-		auto list = std::make_unique<std::vector<std::string>>();
+CREATING A NEW SCHEMA OR ASSIGNIG TO EXISTING SCHEMA MUST PASS SOME SIMILAR QUERY TO THIS TO MAKE SURE SCHEMA NAME IS FREE/OR SCHEMA ALREADY EXISTS
+std::unique_ptr<std::vector<std::string>> DATABASE::GetSchemaList()const {
+auto list = std::make_unique<std::vector<std::string>>();
 
-		std::unique_ptr<sql::Connection> conn(driver->connect(ip, server_name, server_password));
-		std::unique_ptr<sql::Statement>  stmt(conn->createStatement());
-		std::unique_ptr<sql::ResultSet>  results(stmt->executeQuery("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME NOT IN ('sys', 'performance_schema', 'information_schema', 'mysql');"));
+std::unique_ptr<sql::Connection> conn(driver->connect(ip, server_name, server_password));
+std::unique_ptr<sql::Statement>  stmt(conn->createStatement());
+std::unique_ptr<sql::ResultSet>  results(stmt->executeQuery("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME NOT IN ('sys', 'performance_schema', 'information_schema', 'mysql');"));
 
-		while (results->next()) {
-			list->push_back(results->getString(1));
-		}
+while (results->next()) {
+list->push_back(results->getString(1));
+}
 
-		return list;
-	}
+return list;
+}
 */
 
 namespace badSQL {
 
 
-	std::string translate_connection_throw_message_to_peepo(const sql::SQLException& e, const std::string& service)
+	std::string translate_sql_throw_message_to_peepo_table(const sql::SQLException& e, const std::string& service = {})
 	{
-		switch (e.getErrorCode()) {
-		case 2005:
-			return "Invalid host [" + service + "]";
-		case 2002: 
-		case 2003: 
-			return "Server unreachable [" + service + "]";
-		case 1045: 
-			return "Invalid username or password";
-		case 1049: 
-			return "Database does not exist";
-		case 1044:
-			return "Perimission denied";
-		}
-
-
 		const std::string& state = e.getSQLState();
-		if (state.rfind("08", 0) == 0)
-			return "Network error while connecting to [" + service + "]";
+		const int code = e.getErrorCode();
 
 		if (state == "HYT00" || state == "HYT01")
 			return "Connection timed out [" + service + "]";
+		if (state.rfind("08", 0) == 0)
+			return "Network / connection error [" + service + "]";
 
-		return "Failed to connect to [" + service + "]";//default
+		if (state.rfind("28", 0) == 0)
+			return "Authorization failure";
+
+		if (state.rfind("42", 0) == 0)
+			return "Invalid SQL statement";
+
+		if (state.rfind("22", 0) == 0)
+			return "Invalid data value";
+
+		if (state.rfind("23", 0) == 0)
+			return "Constraint violation";
+
+		if (state.rfind("40", 0) == 0)
+			return "Transaction conflict (deadlock)";
+
+
+		switch (code) {
+		case 1062:
+			return "Duplicate entry";
+
+		case 1050:
+			return "Table already exists";
+
+		case 1007:
+			return "Schema already exists";
+
+		case 1049:
+			return "Database does not exist";
+
+		case 1045:
+			return "Invalid username or password";
+
+		case 1142:
+		case 1044:
+			return "Permission denied";
+
+		case 2002:
+		case 2003:
+			return "Server unreachable [" + service + "]";
+
+		case 2005:
+			return "Invalid host [" + service + "]";
+
+		case 2006:
+		case 2013:
+		case 2055:
+			return "Connection lost while executing command";
+
+		case 1064:
+			return "SQL syntax error";
+		}
+
+		return "Undefined error: " + std::string(e.what());
 	}
 
-	class DBConnect 
+	class DBConnect
 	{
 
 	public:
-
+		DBConnect() = default;
 		DBConnect(const std::string& user, const std::string& password, const std::string& service = "tcp://127.0.0.1:3306")
 			:service(service), user(user), password(password)
 		{
@@ -68,9 +108,11 @@ namespace badSQL {
 		}
 
 
-		void connect(const std::string& user, const std::string& password, const std::string& service)
+		std::string connect(const std::string& user, const std::string& password, const std::string& service)
 		{
+			auto& logger = Logger::instance();
 			close();
+			std::string responce = "Success";
 
 			try {
 				mDriver = sql::mysql::get_driver_instance();
@@ -80,14 +122,47 @@ namespace badSQL {
 				mConnect.release();
 				mDriver = nullptr;
 
-				throw BadException(translate_connection_throw_message_to_peepo(e, service).c_str());
+				responce = translate_sql_throw_message_to_peepo_table(e, service);
+				logger.add_error(responce);
 			}
+			return responce;
 		}
 
+		std::string do_simple_command(const std::string& command)
+		{
+			auto& logger = Logger::instance();
+			std::string responce = "Success";
 
-		bool setSchema(std::string_view name);
-		bool doCommand(const SQLCommand command);
-		bool doPreparedInsert(SQLInsertOp op);
+			try {
+				std::unique_ptr<sql::Statement> stmt(mConnect->createStatement());
+				stmt->execute(command);
+			}
+			catch (const sql::SQLException& e) {
+				responce = translate_sql_throw_message_to_peepo_table(e);
+				logger.add_error(responce);
+			}
+			return responce;
+		}
+
+		template<typename T, typename Binder>//TODO:: a good way to harden binder, not using poly. template allows for customs
+		std::string do_prepared_statement(const std::string& statement, const T& info, Binder&& binder)
+		{
+			auto& logger = Logger::instance();
+			std::unique_ptr<sql::PreparedStatement> pstmt;
+			std::string responce = "Success";
+
+			try {
+				std::unique_ptr<sql::PreparedStatement> pstmt(mConnect->prepareStatement(statement));
+				binder(pstmt.get(), info);
+				pstmt->executeUpdate();
+			}
+			catch(const sql::SQLException&e ){
+				responce = translate_sql_throw_message_to_peepo_table(e);
+				logger.add_error(responce);
+			}
+			
+			return responce;
+		}
 
 		void close()
 		{

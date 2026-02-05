@@ -146,7 +146,6 @@
     <ClCompile Include="bad_exceptions.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NumberGenerator.cpp" />
-    <ClCompile Include="SQLFlight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bad_concepts.h" />

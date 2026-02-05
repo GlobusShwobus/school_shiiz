@@ -45,8 +45,11 @@ namespace badSQL
 
 
 
-	std::string create_database(std::string_view name) {
-		return "CREATE DATABASE " + std::string(name) + ';';
+	std::string create_database_command(std::string_view name) {
+		return "CREATE DATABASE " + std::string(name) + ";";
+	}
+	std::string create_use_database_command(std::string_view name) {
+		return "USE " + std::string(name) + ";";
 	}
 
 	std::string create_table_player_summary()

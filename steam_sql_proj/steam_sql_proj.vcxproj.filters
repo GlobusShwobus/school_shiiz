@@ -22,9 +22,6 @@
     <ClCompile Include="NumberGenerator.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
-    <ClCompile Include="SQLFlight.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sequence.h">

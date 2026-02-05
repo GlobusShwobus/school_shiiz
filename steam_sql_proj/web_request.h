@@ -34,7 +34,7 @@ namespace badSQL
 
 	// returns true on success, false on failure
 	// on failure call Logger::last_error for more info
-	bool validate_certificate(std::string path)
+	bool validate_certificate(std::string_view path)
 	{
 		CURL* curl = curl_easy_init();
 
@@ -42,7 +42,7 @@ namespace badSQL
 			return false;
 		}
 
-		curl_easy_setopt(curl, CURLOPT_CAINFO, path.c_str());
+		curl_easy_setopt(curl, CURLOPT_CAINFO, path);
 
 		//test on local host
 		curl_easy_setopt(curl, CURLOPT_URL, "https://localhost");
@@ -54,7 +54,7 @@ namespace badSQL
 		return response == CURLE_OK || response == CURLE_COULDNT_CONNECT;
 	}
 
-	WebRequestHandle request_data(std::string url, std::string certificate)
+	WebRequestHandle request_data(std::string_view url, std::string_view certificate)
 	{
 		WebRequestHandle handle;
 		auto& logger = Logger::instance();
@@ -82,11 +82,11 @@ namespace badSQL
 			}
 			return true;
 			};
-
-		if (!setopt(CURLOPT_URL, url.c_str()) ||//might brick of not url.data(), infact expected...
+		//NOTE: using std::string_view and C interface must give .data()
+		if (!setopt(CURLOPT_URL, url.data()) ||
 			!setopt(CURLOPT_WRITEFUNCTION, call_back) ||
 			!setopt(CURLOPT_WRITEDATA, &handle) ||
-			!setopt(CURLOPT_CAINFO, certificate.c_str()))
+			!setopt(CURLOPT_CAINFO, certificate.data()))
 		{
 			return handle;
 		}

@@ -1,6 +1,6 @@
 #include "bad_exceptions.h"
 
-namespace badCore
+namespace badSQL
 {
 	BadException::BadException(const char* my_message, const char* extra)
 		:mDescription(my_message)

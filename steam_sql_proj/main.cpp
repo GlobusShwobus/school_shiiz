@@ -2,19 +2,20 @@
 #include <stdlib.h>  
 #include <crtdbg.h>  
 
-
-#include"web_request.h"
-#include "json.hpp"
-#include "Inputs.h"
-#include "myHelpers.h"
-#include "steamURlEditor.h"
-#include "SQLUser.h"
-#include "SQLFlight.h"
-#include "myDataStructs.h"
 #include "NumberGenerator.h"
+#include "web_request.h"
+#include "make_url.h"
+#include "sql_command.h"
+
+#include "json.hpp"
 
 
-using namespace ORDO;
+#include "SQLFlight.h"
+
+
+
+
+using namespace badSQL;
 /*
 SAVE LOICENSE PATH IN JSON (maybe other shit too, pobably not api key and sql psswords tho)
 */
@@ -31,16 +32,16 @@ SAVE LOICENSE PATH IN JSON (maybe other shit too, pobably not api key and sql ps
  	static constexpr int ASCII_SMALLCHAR_START = 97;
  	static constexpr int ASCII_SMALLCHAR_END = 122;
  
- 	NumberGenerator rng;
+ 	RandomNum rng;
  
  	for (int i = 0; i < 10; i++)
  	{
- 		int dice = rng.getRandInt(0, 2);
+ 		int dice = rng.rInt(0, 2);
  		char c;
  		switch (dice) {
- 		case 0:c = rng.getRandInt(ASCII_NUM_START      , ASCII_NUM_END);	   break;
- 		case 1:c = rng.getRandInt(ASCII_BIGCHAR_START  , ASCII_BIGCHAR_END);   break;
- 		case 2:c = rng.getRandInt(ASCII_SMALLCHAR_START, ASCII_SMALLCHAR_END); break;
+ 		case 0:c = rng.rInt(ASCII_NUM_START      , ASCII_NUM_END);	     break;
+ 		case 1:c = rng.rInt(ASCII_BIGCHAR_START  , ASCII_BIGCHAR_END);   break;
+ 		case 2:c = rng.rInt(ASCII_SMALLCHAR_START, ASCII_SMALLCHAR_END); break;
  		default:
  			printf("random name generation RNG missfire\n");
  			continue;
@@ -50,54 +51,44 @@ SAVE LOICENSE PATH IN JSON (maybe other shit too, pobably not api key and sql ps
  	return prefix;
  }
  //#########################################
-void testSQLFlightSystem() {
+void test123() {
 
-    const std::string schemaName = GenerateRandomName("LANDING_");  //important diff, need to assign some name before, otherwise use setSchemaName
+    std::string steam_id;
+    std::string api_key;
+    std::string cert_path;
 
-    SQLUser user;
-    SteamSummary summary(schemaName);
-    SQLFlight flight;
+    std::string games_list_url = make_player_summary_url(api_key, steam_id);
 
-    lazy::console_title();
+   // bool is_good_cert = validate_certificate(cert_path);
+    std::cout << "your url: " << games_list_url << '\n';
+    //std::cout << "your cert status: " << is_good_cert << '\n';
 
-    //initialize summary members
-    summary.name = "Bob";
-    summary.accountUrl = "zombocom";
-    summary.countryCode = "EE";
-    long long lalalong = 946684800;//jan 1st 2000
-    summary.creationDate = lazy::UnixTime(lalalong);
-    summary.playerId = 123456;
-    summary.playerLevel = 69;
-    //##############################
+    auto data = request_data(games_list_url, cert_path);
 
-    //ask for IP, sql user, and sql password
-    std::string IP;
-    std::string username;
-    std::string password;
-    std::cout << "Enter IP: ";
-    IP = Inputs::InputStr();
-    std::cout << "Enter username: ";
-    username = Inputs::InputStr();
-    std::cout << "Enter password: ";
-    password = Inputs::InputStr();
 
-    user = SQLUser(IP, username, password);
+
+    nlohmann::json json = nlohmann::json::parse(data.data);
+
+    std::cout << json.dump(4) << '\n';
+
+
+    DBConnect sqlcon;
     
-    flight.connect(user.getIP(), user.getSName(), user.getSPassword());
-    if (flight.isGood()) {
+    std::cout << sqlcon.connect() << '\n';
 
-        flight.doCommand(summary.createSchemaCommand());
-        flight.setSchema(summary.getSchemaName());
-        flight.doCommand(summary.createTableCommand());
-        flight.doPreparedInsert(summary.insertQuery());
-        std::cout << '\n' << "SUCCESS";
-        lazy::console_wait();
-    }
-    else {
-        std::cout << '\n' << flight.getStreamError();
-        lazy::console_wait();
-        return;
-    }
+    std::string do_db_command = create_database_command("bill_clinton");
+    std::cout << sqlcon.do_simple_command(do_db_command);
+    std::cout << sqlcon.do_simple_command(create_use_database_command("bill_clinton"));
+    std::string create_table_command = create_table_player_summary();
+
+    std::cout << sqlcon.do_simple_command(create_table_command);
+
+    std::string insert_table_command = insert_into_player_summary();
+    player_summary_info info(
+    "albert","meme123","geb","2025-02-05",123123,69
+    );
+    std::cout << sqlcon.do_prepared_statement(insert_table_command, info, bind_player_summary_info);
+
 }
 
 int main() {
@@ -108,8 +99,10 @@ int main() {
     _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
     _CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);
 
-    testSQLFlightSystem();
+    {
+        test123();
 
+    }
     _CrtDumpMemoryLeaks();
     
     return 0;
