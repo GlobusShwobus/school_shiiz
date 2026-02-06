@@ -106,4 +106,126 @@ namespace badSQL
 		return handle;
 	}
 
+
+	Sequence<WebRequestHandle> multi_request_data(std::span<std::string_view> urls, std::string_view certificate)
+	{
+		Sequence<WebRequestHandle> handles;
+		auto& logger = Logger::instance();
+
+		//phase 0: try to global init
+		CURLcode result = curl_global_init(CURL_GLOBAL_ALL);
+		if (result != CURLE_OK) {
+			logger.add_error("Global init fail"+ std::string(curl_easy_strerror(result)));
+			return handles;
+		}
+
+		//phase 1: set up all the individual curl handles
+		struct CURL_ARRAY {
+			Sequence<CURL*> curlarry;
+
+			~CURL_ARRAY() {
+				for (auto* c : curlarry) {
+					curl_easy_cleanup(c);
+				}
+			}
+		}curlarry;
+
+		auto& curls = curlarry.curlarry;
+		curls.set_capacity(urls.size());
+		handles.set_capacity(urls.size());
+
+		//TODO:: THIS STEP SHOULD BE DONE BETTER, NOT SURE HOW YET THO. I SHOULD BE ABLE TO SET PER CASE OPTIONS + REPETITION
+		for (const auto& url:urls) {
+			CURL* c = curl_easy_init();
+			handles.emplace_back();
+			auto& handle = handles.back();
+			if (!c) {
+				logger.add_error("failed to init libcurl");
+				continue;
+			}
+
+			CURLcode op1 = curl_easy_setopt(c, CURLOPT_URL, url.data());
+			if (!op1) {
+				logger.add_error(std::string("curl_easy_setopt fail") + curl_easy_strerror(op1));
+				curl_easy_cleanup(c);
+				continue;
+			}
+
+			CURLcode op2 = curl_easy_setopt(c, CURLOPT_WRITEFUNCTION, call_back);
+			if (!op2) {
+				logger.add_error(std::string("curl_easy_setopt fail") + curl_easy_strerror(op2));
+				curl_easy_cleanup(c);
+				continue;
+			}
+
+			CURLcode op3 = curl_easy_setopt(c, CURLOPT_CAINFO, certificate.data());
+			if (!op3) {
+				logger.add_error(std::string("curl_easy_setopt fail") + curl_easy_strerror(op3));
+				curl_easy_cleanup(c);
+				continue;
+			}
+
+			CURLcode op3 = curl_easy_setopt(c, CURLOPT_WRITEDATA, &handle);
+			if (!op3) {
+				logger.add_error(std::string("curl_easy_setopt fail") + curl_easy_strerror(op3));
+				curl_easy_cleanup(c);
+				handles.pop_back();
+				continue;
+			}
+		}
+
+		//phase 3: set up multi handle
+		CURLM* multi = curl_multi_init();
+
+		if (multi) {
+			int still_running = 1;
+
+			CURLMsg* msg;
+			int msgs_left;
+
+			for (auto* c : curls) {
+				curl_multi_add_handle(multi, c);
+			}
+
+			while (still_running) {
+				CURLMcode mresult = curl_multi_perform(multi, &still_running);
+				if (still_running)
+					/* wait for activity, timeout or "nothing" */
+					mresult = curl_multi_poll(multi, NULL, 0, 1000, NULL);
+
+				if (mresult)
+					break;
+			}
+
+			while ((msg = curl_multi_info_read(multi, &msgs_left)) != NULL) {
+				if (msg->msg == CURLMSG_DONE) {
+					int idx;
+
+					/* Find out which handle this message is about */
+					for (idx = 0; idx < curls.size(); idx++) {
+						int found = (msg->easy_handle == curls[idx]);
+						if (found)
+							break;
+					}
+
+					switch (idx) {
+					case 0://HTTP_HANDLE
+						logger.add_log("HTTP transfer completed with status: " + msg->data.result);
+						break;
+					case 1://FTP_HANDLE
+						logger.add_log("FTP transfer completed with status : " + msg->data.result);
+						break;
+					}
+				}
+			}
+			for (int i = 0; i < curls.size(); i++) {
+				curl_multi_remove_handle(multi, curls[i]);
+			}
+
+			curl_multi_cleanup(multi);
+		}
+
+		curl_global_cleanup();
+	}
+
 }
