@@ -13,6 +13,7 @@
 #include "SQLConnect.h"
 #include <vector>
 
+#include "bad_utility.h"
 
 
 using namespace badSQL;
@@ -23,6 +24,8 @@ SAVE LOICENSE PATH IN JSON (maybe other shit too, pobably not api key and sql ps
 /*
 * possible to do a vanity check for steam API to check validity < ResolveVanityURL >
 */
+
+
 
  std::string GenerateRandomName(std::string prefix = "") {
  	static constexpr int ASCII_NUM_START = 48;
@@ -53,51 +56,93 @@ SAVE LOICENSE PATH IN JSON (maybe other shit too, pobably not api key and sql ps
  //#########################################
 void test123() {
 
-    std::string steam_id;
-    std::string api_key;
-    std::string cert_path;
-
-    std::string games_list_url = make_player_summary_url(api_key, steam_id);
-
-   // bool is_good_cert = validate_certificate(cert_path);
-    std::cout << "your url: " << games_list_url << '\n';
-    //std::cout << "your cert status: " << is_good_cert << '\n';
-
-    auto data = request_data(games_list_url, cert_path);
-
-
-
-    nlohmann::json json = nlohmann::json::parse(data.data);
-
-    std::cout << json.dump(4) << '\n';
-
-
-    DBConnect sqlcon;
-    
-    std::cout << sqlcon.connect("root", "", "tcp://127.0.0.1:3306") << '\n';
-
-    std::string do_db_command = create_database_command("bill_clinton");
-    std::cout << sqlcon.do_simple_command(do_db_command);
-    std::cout << sqlcon.do_simple_command(create_use_database_command("bill_clinton"));
-    std::string create_table_command = create_table_player_summary();
-
-    std::cout << sqlcon.do_simple_command(create_table_command);
-
-    std::string insert_table_command = insert_into_player_summary();
-    player_summary_info info(
-    "albert","meme123","geb","2025-02-05",123123,69
-    );
-
-    Sequence<player_summary_info> infos = {
-        {  "albert","meme1234","geb","2025-02-05",455425,420},
-        {  "anna","meme1235","geb","2024-02-05",1231246363,69},
-        {  "mihkel;","meme1236","geb","2023-02-05",23546536,42069},
-        {  "yoyo","meme1273","geb","2022-02-05",2345625762,123}
+    std::string cert_path="C:/Users/ADMIN/Desktop/tools/cacert.pem";
+    //APP ID's
+    std::vector<std::string> apps = {
+           "1621690", "1091500", "374320", "1085660", "230230",
+           "435150", "1888160", "33230", "48190"
     };
 
+    Sequence<std::string> urls;
+    for (const auto& app : apps) {
+        urls.emplace_back(make_achievement_globalinfo_url(app));
+        std::cout << "URL: " << urls.back() << '\n';
+    }
 
-    std::cout << sqlcon.do_prepared_statement(insert_table_command, std::span<const player_summary_info>(infos), bind_player_summary_info);
+    std::cout << "\n";
 
+    auto results = multi_request_data(urls, cert_path);
+    std::cout << "results size: " << results.size() << '\n';
+
+    Sequence<nlohmann::json> jsons;
+    int empty_responses = 0;
+    int failed_responses = 0;
+    int success_responses = 0;
+
+    for (size_t i = 0; i < results.size(); ++i) {
+        const auto& r = results[i];
+        std::cout << "App ID: " << apps[i] << "\n";
+        std::cout << "HTTP Code: " << r.httpcode << "\n";
+        std::cout << "Data size: " << r.data.size() << " bytes\n";
+
+        if (r.is_good) {
+            if (!r.data.isEmpty()) {
+                try {
+                    std::string response(r.data.data(), r.data.size());
+
+                    // Check if it's empty JSON
+                    if (response == "{}" || response.empty()) {
+                        std::cout << "Status: No achievement data for this game\n";
+                        empty_responses++;
+
+                        // Still create empty JSON
+                        jsons.emplace_back(nlohmann::json::object());
+                    }
+                    else {
+                        nlohmann::json json = nlohmann::json::parse(r.data.data());
+                        std::cout << "Status: Success (" << json.size() << " achievements)\n";
+                        success_responses++;
+                        jsons.push_back(std::move(json));
+                    }
+                }
+                catch (const std::exception& e) {
+                    std::cout << "Status: JSON Parse Error - " << e.what() << "\n";
+                    failed_responses++;
+                }
+            }
+            else {
+                std::cout << "Status: Empty response (0 bytes)\n";
+                empty_responses++;
+                jsons.emplace_back(nlohmann::json::object());
+            }
+        }
+        else {
+            std::cout << "Status: FAIL (HTTP " << r.httpcode << ")\n";
+            failed_responses++;
+
+            // Print error data if available
+            if (!r.data.isEmpty()) {
+                std::string error(r.data.data(), core_min(r.data.size(), std::size_t(200)));
+                std::cout << "Error response: " << error << "\n";
+            }
+        }
+        std::cout << "---\n";
+    }
+
+    std::cout << "\nSummary:\n";
+    std::cout << "Total requests: " << results.size() << "\n";
+    std::cout << "Successful (with data): " << success_responses << "\n";
+    std::cout << "Empty responses ({}): " << empty_responses << "\n";
+    std::cout << "Failed responses: " << failed_responses << "\n\n";
+
+    // Print non-empty JSONs
+    std::cout << "Non-empty JSON data:\n";
+    for (size_t i = 0; i < jsons.size(); ++i) {
+        if (!jsons[i].empty()) {
+            std::cout << "App " << apps[i] << ":\n";
+            std::cout << jsons[i].dump(2) << "\n\n";
+        }
+    }
 }
 
 int main() {
@@ -108,12 +153,21 @@ int main() {
     _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
     _CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);
 
+
     {
+        CURLcode result = curl_global_init(CURL_GLOBAL_ALL);
+        if (result != CURLE_OK) {
+            std::cout << curl_easy_strerror(result) << '\n';
+            return -1;
+        }
+
         test123();
 
+        curl_global_cleanup();
     }
+
+
     _CrtDumpMemoryLeaks();
-    
     return 0;
 }
 
