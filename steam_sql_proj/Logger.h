@@ -1,10 +1,8 @@
 #pragma once
 
 #include <string>
-#include "Sequence.h"
-#include <span>
-#include <string_view>
 #include <mutex>
+#include "Sequence.h"
 
 namespace badSQL
 {
@@ -16,44 +14,46 @@ namespace badSQL
 		Logger(Logger&&) = delete;
 		Logger& operator=(Logger&&) = delete;
 
-		static Logger& instance()
+		static Logger& instance() noexcept
 		{
 			static Logger instance;
 			return instance;
 		}
 
-		// add some info
-		void add_log(std::string_view message) 
+		template <typename... Args>
+		void add_log(Args&&... args) 
+			requires std::constructible_from<std::string, Args...>
 		{
 			std::lock_guard<std::mutex> lock(mMutex);
-			mLogs.emplace_back(message);
+			mLogs.emplace_back(std::forward<Args>(args)...);
 		}
 
-		// add an error
-		void add_error(std::string_view error)
+		template <typename... Args>
+		void add_error(Args&&... args)
+			requires std::constructible_from<std::string, Args...>
 		{
 			std::lock_guard<std::mutex> lock(mMutex);
-			mErrors.emplace_back(error);
+			mErrors.emplace_back(std::forward<Args>(args)...);
 		}
 
-		std::span<const std::string> get_logs()const
+		const auto& get_logs()const noexcept
 		{
 			return mLogs;
 		}
 
-		std::span<const std::string> get_errors()const
+		const auto& get_errors()const noexcept
 		{
 			return mErrors;
 		}
 
-		// return last entry. may return nullptr
-		std::string_view last_log()const
+		// returns last log or empty if none exist
+		std::string last_log()const noexcept
 		{
 			return mLogs.isEmpty() ? "" : mLogs.back();
 		}
 
-		// return last entry
-		std::string_view last_error()const
+		// returns last log or empty if none exist
+		std::string last_error()const noexcept
 		{
 			return mErrors.isEmpty() ? "" : mErrors.back();
 		}

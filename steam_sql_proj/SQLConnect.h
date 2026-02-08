@@ -32,15 +32,15 @@ return list;
 namespace badSQL {
 
 
-	std::string translate_sql_throw_message_to_peepo_table(const sql::SQLException& e, const std::string& service = {})
+	std::string translate_sql_throw_message_to_peepo_table(const sql::SQLException& e)
 	{
 		const std::string& state = e.getSQLState();
 		const int code = e.getErrorCode();
 
 		if (state == "HYT00" || state == "HYT01")
-			return "Connection timed out [" + service + "]";
+			return "Connection timed out";
 		if (state.rfind("08", 0) == 0)
-			return "Network / connection error [" + service + "]";
+			return "Network / connection error";
 
 		if (state.rfind("28", 0) == 0)
 			return "Authorization failure";
@@ -80,10 +80,10 @@ namespace badSQL {
 
 		case 2002:
 		case 2003:
-			return "Server unreachable [" + service + "]";
+			return "Server unreachable";
 
 		case 2005:
-			return "Invalid host [" + service + "]";
+			return "Invalid host";
 
 		case 2006:
 		case 2013:
@@ -97,13 +97,12 @@ namespace badSQL {
 		return "Undefined error: " + std::string(e.what());
 	}
 
-	class DBConnect
+	class DBConnect final
 	{
 
 	public:
 		DBConnect() = default;
 		DBConnect(const std::string& user, const std::string& password, const std::string& service = "tcp://127.0.0.1:3306")
-			:service(service), user(user), password(password)
 		{
 			connect(user, password, service);
 		}
@@ -123,7 +122,7 @@ namespace badSQL {
 				mConnect.release();
 				mDriver = nullptr;
 
-				responce = translate_sql_throw_message_to_peepo_table(e, service);
+				responce = translate_sql_throw_message_to_peepo_table(e);
 				logger.add_error(responce);
 			}
 			return responce;
@@ -206,18 +205,10 @@ namespace badSQL {
 		{
 			mConnect.release();
 			mDriver = nullptr;
-			service.clear();
-			user.clear();
-			password.clear();
 		}
 
 	private:
 		sql::mysql::MySQL_Driver* mDriver = nullptr;
 		std::unique_ptr<sql::Connection> mConnect = nullptr;
-
-
-		std::string service;
-		std::string user;
-		std::string password;
 	};
 }

@@ -22,6 +22,9 @@
     <ClCompile Include="NumberGenerator.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
+    <ClCompile Include="steam_urls.cpp">
+      <Filter>thisproj</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sequence.h">
@@ -42,10 +45,7 @@
     <ClInclude Include="web_request.h">
       <Filter>thisproj</Filter>
     </ClInclude>
-    <ClInclude Include="make_url.h">
-      <Filter>thisproj</Filter>
-    </ClInclude>
-    <ClInclude Include="user.h">
+    <ClInclude Include="steam_urls.h">
       <Filter>thisproj</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h">
@@ -54,10 +54,19 @@
     <ClInclude Include="Stuff.h">
       <Filter>thisproj</Filter>
     </ClInclude>
-    <ClInclude Include="sql_command.h">
+    <ClInclude Include="steam_sql_commands.h">
       <Filter>thisproj</Filter>
     </ClInclude>
     <ClInclude Include="SQLConnect.h">
+      <Filter>thisproj</Filter>
+    </ClInclude>
+    <ClInclude Include="custom_sql_command.h">
+      <Filter>thisproj</Filter>
+    </ClInclude>
+    <ClInclude Include="extract_and_bind.h">
+      <Filter>thisproj</Filter>
+    </ClInclude>
+    <ClInclude Include="password.h">
       <Filter>thisproj</Filter>
     </ClInclude>
   </ItemGroup>

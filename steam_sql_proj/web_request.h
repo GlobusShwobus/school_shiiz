@@ -1,8 +1,9 @@
 #pragma once
 
 #include <string>
-#include <vector>
 #include "Logger.h"
+#include <span>
+#include "Sequence.h"
 
 #include <curl/curl.h>
 

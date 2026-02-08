@@ -146,19 +146,22 @@
     <ClCompile Include="bad_exceptions.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NumberGenerator.cpp" />
+    <ClCompile Include="steam_urls.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bad_concepts.h" />
     <ClInclude Include="bad_exceptions.h" />
     <ClInclude Include="bad_utility.h" />
+    <ClInclude Include="custom_sql_command.h" />
+    <ClInclude Include="extract_and_bind.h" />
+    <ClInclude Include="password.h" />
     <ClInclude Include="Stuff.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="NumberGenerator.h" />
     <ClInclude Include="Sequence.h" />
     <ClInclude Include="SQLConnect.h" />
-    <ClInclude Include="sql_command.h" />
-    <ClInclude Include="make_url.h" />
-    <ClInclude Include="user.h" />
+    <ClInclude Include="steam_sql_commands.h" />
+    <ClInclude Include="steam_urls.h" />
     <ClInclude Include="web_request.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

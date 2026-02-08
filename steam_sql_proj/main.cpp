@@ -1,31 +1,20 @@
 #define _CRTDBG_MAP_ALLOC  
-#include <stdlib.h>  
-#include <crtdbg.h>  
 
+#include <string>
+#include <iostream>
 #include "NumberGenerator.h"
+#include "Sequence.h"
+#include "steam_urls.h"
 #include "web_request.h"
-#include "make_url.h"
-#include "sql_command.h"
-
 #include "json.hpp"
 
-
-#include "SQLConnect.h"
-#include <vector>
-
-#include "bad_utility.h"
-
+#include "Stuff.h"
 
 using namespace badSQL;
-/*
-SAVE LOICENSE PATH IN JSON (maybe other shit too, pobably not api key and sql psswords tho)
-*/
 
-/*
-* possible to do a vanity check for steam API to check validity < ResolveVanityURL >
-*/
-
-
+//TODO:: create database name must be unique- make a checker function
+//TODO:: use database may fail if db doesnt exist or typo- make a checker function
+//TODO:: create table duplicate should fail safely
 
  std::string GenerateRandomName(std::string prefix = "") {
  	static constexpr int ASCII_NUM_START = 48;
@@ -65,7 +54,7 @@ void test123() {
 
     Sequence<std::string> urls;
     for (const auto& app : apps) {
-        urls.emplace_back(make_achievement_globalinfo_url(app));
+        urls.emplace_back(makeurl_steam_app_achievement_list(app));
         std::cout << "URL: " << urls.back() << '\n';
     }
 
@@ -161,7 +150,9 @@ int main() {
             return -1;
         }
 
-        test123();
+       // test123();
+
+        std::cout << console_title() << '\n';
 
         curl_global_cleanup();
     }
