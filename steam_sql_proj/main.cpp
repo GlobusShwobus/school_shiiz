@@ -9,6 +9,7 @@
 #include "json.hpp"
 
 #include "Stuff.h"
+#include "input.h"
 
 using namespace badSQL;
 
@@ -152,7 +153,8 @@ int main() {
 
        // test123();
 
-        std::cout << console_title() << '\n';
+        input_password();
+
 
         curl_global_cleanup();
     }

@@ -40,6 +40,11 @@ namespace badSQL
    //     std::cin.get();
    // }
 
+    void console_clear() {
+        system("cls");
+    }
+
+
     constexpr std::string_view console_title() noexcept
     {
         return R"( _             _ ___  ___  _    
@@ -48,16 +53,5 @@ namespace badSQL
 |_.__/\__,_\__,_|___/\__\_\____|
  )";
     }
-
-    void console_clear() {
-        system("cls");
-    }
-
-    std::string input() {
-        std::string str;
-        std::getline(std::cin, str);
-        return str;
-    }
-
 
 }

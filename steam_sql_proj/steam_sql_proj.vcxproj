@@ -154,7 +154,7 @@
     <ClInclude Include="bad_utility.h" />
     <ClInclude Include="custom_sql_command.h" />
     <ClInclude Include="extract_and_bind.h" />
-    <ClInclude Include="password.h" />
+    <ClInclude Include="input.h" />
     <ClInclude Include="Stuff.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="NumberGenerator.h" />

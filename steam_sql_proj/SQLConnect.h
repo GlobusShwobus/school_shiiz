@@ -1,11 +1,11 @@
 #pragma once
 
 #include <string>
-#include "bad_exceptions.h"
 #include <mysql_driver.h>              //for driver
 #include <cppconn/prepared_statement.h>//for prep statements
 #include <span>
 #include "Logger.h"
+#include "input.h"
 
 
 /*
@@ -102,21 +102,25 @@ namespace badSQL {
 
 	public:
 		DBConnect() = default;
-		DBConnect(const std::string& user, const std::string& password, const std::string& service = "tcp://127.0.0.1:3306")
+		DBConnect(const std::string& user, const std::string& service = "tcp://127.0.0.1:3306")
 		{
-			connect(user, password, service);
+			connect(user, service);
 		}
 
 
-		std::string connect(const std::string& user, const std::string& password, const std::string& service)
+		std::string connect(const std::string& user, const std::string& service)
 		{
 			auto& logger = Logger::instance();
 			close();
 			std::string responce = "Success";
 
 			try {
+				Sequence<char> password = input_password();
 				mDriver = sql::mysql::get_driver_instance();
-				mConnect.reset(mDriver->connect(service, user, password));
+				mConnect.reset(mDriver->connect(service, user, password.data()));
+
+				std::fill(password.begin(), password.end(), '\0');
+				password.clear();
 			}
 			catch (const sql::SQLException& e) {
 				mConnect.release();
