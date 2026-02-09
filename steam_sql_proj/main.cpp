@@ -134,6 +134,14 @@ void test123() {
         }
     }
 }
+class compelx {
+public:
+    compelx() = default;
+private:
+    std::string str1 = "averyveryveryveryveryveryveryveryveryveryveryverylongstring";
+    std::string str2 = "averyveryveryveryveryveryveryveryveryveryveryverylongstring";
+    RandomNum nums;//std::mt19997
+};
 
 int main() {
     _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
@@ -152,8 +160,14 @@ int main() {
         }
 
        // test123();
+        Sequence<compelx> sc;
+        sc.emplace_back();
+        sc.emplace_back();
+        sc.emplace_back();
 
-        input_password();
+
+        sc.wipe();
+
 
 
         curl_global_cleanup();

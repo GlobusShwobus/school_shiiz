@@ -69,4 +69,14 @@ namespace badSQL
 	{
 		return x != x;
 	}
+
+	inline void secure_zero_bytes(void* ptr, std::size_t size) noexcept
+	{
+		//force the compiler to actually perform the operation via volitile
+		volatile unsigned char* p =
+			reinterpret_cast<volatile unsigned char*>(ptr);
+		while (size--) {
+			*p++ = 0;
+		}
+	}
 }

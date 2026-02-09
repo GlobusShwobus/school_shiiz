@@ -119,8 +119,9 @@ namespace badSQL {
 				mDriver = sql::mysql::get_driver_instance();
 				mConnect.reset(mDriver->connect(service, user, password.data()));
 
+				//two layer wipe, intentional
 				std::fill(password.begin(), password.end(), '\0');
-				password.clear();
+				password.wipe();
 			}
 			catch (const sql::SQLException& e) {
 				mConnect.release();

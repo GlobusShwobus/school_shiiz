@@ -6,6 +6,20 @@
 #include "bad_concepts.h"
 #include "bad_utility.h"
 
+
+#include <iostream>
+#include <bitset>
+
+inline void read_bytes_bits(void* bytes, std::size_t size) noexcept
+{
+	auto* p = static_cast<unsigned char*>(bytes);
+
+	for (std::size_t i = 0; i < size; ++i) {
+		std::cout << std::bitset<8>(p[i]) << ' ';
+	}
+	std::cout << '\n';
+}
+
 namespace badSQL
 {
 	template<typename T> requires IS_SEQUENCE_COMPATIBLE<T>
@@ -310,6 +324,26 @@ namespace badSQL
 		{
 			destroy_objects(begin(), end());
 			mSize = 0;
+		}
+		//clears and sets to nullptr
+		void wipe()noexcept
+		{
+			if (!mArray || mCapacity == 0)
+				return;
+
+			/*debug*/ read_bytes_bits(mArray, mSize*sizeof(value_type));
+
+			destroy_objects(begin(), end());
+			secure_zero_bytes(mArray, mCapacity * sizeof(value_type));
+			/*debug*/ std::cout << "\n\n\n";
+			/*debug*/ std::cin.get();
+			/*debug*/ read_bytes_bits(mArray, mSize * sizeof(value_type));
+
+			::operator delete(mArray);
+			
+			mArray = nullptr;
+			mSize = 0;
+			mCapacity = 0;;
 		}
 
 		//copies elements
