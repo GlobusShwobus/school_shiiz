@@ -7,6 +7,7 @@
 #include "steam_urls.h"
 #include "web_request.h"
 #include "json.hpp"
+#include "SQLConnect.h"
 
 #include "Stuff.h"
 #include "input.h"
@@ -160,15 +161,10 @@ int main() {
         }
 
        // test123();
-        Sequence<compelx> sc;
-        sc.emplace_back();
-        sc.emplace_back();
-        sc.emplace_back();
+        DBConnect bitconeeeeeeeeeeeeeeect;
 
-
-        sc.wipe();
-
-
+        auto responce = bitconeeeeeeeeeeeeeeect.connect("root", "tcp://127.0.0.1:3306");
+        std::cout << responce << '\n';
 
         curl_global_cleanup();
     }

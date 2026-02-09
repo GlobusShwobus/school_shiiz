@@ -6,7 +6,7 @@
 #include "bad_concepts.h"
 #include "bad_utility.h"
 
-
+/*
 #include <iostream>
 #include <bitset>
 
@@ -19,6 +19,7 @@ inline void read_bytes_bits(void* bytes, std::size_t size) noexcept
 	}
 	std::cout << '\n';
 }
+*/
 
 namespace badSQL
 {
@@ -331,13 +332,8 @@ namespace badSQL
 			if (!mArray || mCapacity == 0)
 				return;
 
-			/*debug*/ read_bytes_bits(mArray, mSize*sizeof(value_type));
-
 			destroy_objects(begin(), end());
 			secure_zero_bytes(mArray, mCapacity * sizeof(value_type));
-			/*debug*/ std::cout << "\n\n\n";
-			/*debug*/ std::cin.get();
-			/*debug*/ read_bytes_bits(mArray, mSize * sizeof(value_type));
 
 			::operator delete(mArray);
 			

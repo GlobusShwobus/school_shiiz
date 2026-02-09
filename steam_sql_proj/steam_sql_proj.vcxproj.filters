@@ -25,6 +25,9 @@
     <ClCompile Include="steam_urls.cpp">
       <Filter>thisproj</Filter>
     </ClCompile>
+    <ClCompile Include="CharBuffer.cpp">
+      <Filter>thisproj</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sequence.h">
@@ -67,6 +70,9 @@
       <Filter>thisproj</Filter>
     </ClInclude>
     <ClInclude Include="input.h">
+      <Filter>thisproj</Filter>
+    </ClInclude>
+    <ClInclude Include="CharBuffer.h">
       <Filter>thisproj</Filter>
     </ClInclude>
   </ItemGroup>
