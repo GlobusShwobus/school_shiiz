@@ -326,7 +326,7 @@ namespace badSQL
 			destroy_objects(begin(), end());
 			mSize = 0;
 		}
-		//clears and sets to nullptr
+		//clears and sets to nullptr. should only be used if hardcore memory concerns. otherwise just clear() is enough
 		void wipe()noexcept
 		{
 			if (!mArray || mCapacity == 0)

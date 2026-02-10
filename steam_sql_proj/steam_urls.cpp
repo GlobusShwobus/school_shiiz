@@ -3,6 +3,27 @@
 
 namespace badSQL
 {
+	//?key=&steamid=
+	std::string makeurl_steam_player_summary(std::string_view api_key, std::string_view steamid)
+	{
+		return std::format(
+			"{}?key={}&steamids={}&format=json",
+			my_urls::steam_player_summary_baseurl,
+			api_key,
+			steamid
+		);
+	}
+	std::string makeurl_steam_player_level(std::string_view api_key, std::string_view steamid)
+	{
+		return std::format(
+			"{}?key={}&steamid=",
+			my_urls::steam_player_level_baseurl,
+			api_key,
+			steamid
+		);
+	}
+
+
 	std::string makeurl_steam_app_schema(std::string_view api_key, std::string_view appid)
 	{
 		return std::format(
@@ -26,15 +47,6 @@ namespace badSQL
 			api_key,
 			steamid,
 			appid
-		);
-	}
-	std::string makeurl_steam_player_summary(std::string_view api_key, std::string_view steamid)
-	{
-		return std::format(
-			"{}?key={}&steamids={}&format=json",
-			my_urls::steam_player_summary_baseurl,
-			api_key,
-			steamid
 		);
 	}
 	std::string makeurl_steam_player_owned_games_list(std::string_view api_key, std::string_view steamid)

@@ -26,7 +26,7 @@ namespace badSQL
             std::cout << '[' << starting_index++ << "] " << str << '\n';
     }
 
-    const std::string UnixTime(time_t unix_timestamp) {
+    const std::string ll_to_unix_time(std::int64_t unix_timestamp) {
         std::chrono::system_clock::time_point tp = std::chrono::system_clock::from_time_t(unix_timestamp);
         return std::format("{:%Y-%m-%d %H:%M:%S}", std::chrono::floor<std::chrono::seconds>(tp));
     }
@@ -53,5 +53,9 @@ namespace badSQL
 |_.__/\__,_\__,_|___/\__\_\____|
  )";
     }
-
+    std::string input() {
+        std::string str;
+        std::getline(std::cin, str);
+        return str;
+    }
 }

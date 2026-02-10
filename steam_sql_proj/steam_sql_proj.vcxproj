@@ -156,7 +156,6 @@
     <ClInclude Include="CharBuffer.h" />
     <ClInclude Include="custom_sql_command.h" />
     <ClInclude Include="extract_and_bind.h" />
-    <ClInclude Include="input.h" />
     <ClInclude Include="Stuff.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="NumberGenerator.h" />

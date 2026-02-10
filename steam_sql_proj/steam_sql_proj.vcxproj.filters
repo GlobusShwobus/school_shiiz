@@ -69,9 +69,6 @@
     <ClInclude Include="extract_and_bind.h">
       <Filter>thisproj</Filter>
     </ClInclude>
-    <ClInclude Include="input.h">
-      <Filter>thisproj</Filter>
-    </ClInclude>
     <ClInclude Include="CharBuffer.h">
       <Filter>thisproj</Filter>
     </ClInclude>
