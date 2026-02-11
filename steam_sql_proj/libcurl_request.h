@@ -4,20 +4,11 @@
 #include "Logger.h"
 #include <span>
 #include "Sequence.h"
-
 #include <curl/curl.h>
+#include "WebRequestHandle.h"
 
 namespace badSQL
 {
-	//moshi moshi?
-	struct WebRequestHandle {
-		Sequence<char> data;
-		long httpcode = -1;
-		bool is_good = false;
-		std::string contentType;
-	};
-
-
 	static std::size_t call_back(void* content, std::size_t size, std::size_t nmemb, void* clientp)
 	{
 		size_t realSize = size * nmemb;

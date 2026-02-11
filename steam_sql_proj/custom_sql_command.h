@@ -1,7 +1,21 @@
 #pragma once
 #include <string>
 #include "Sequence.h"
-
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
 namespace badSQL
 {
 	/// TODO::

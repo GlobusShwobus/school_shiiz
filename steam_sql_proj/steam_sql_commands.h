@@ -2,7 +2,21 @@
 
 #include <string_view>
 #include "Sequence.h"
-
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
+// DEPRICATED
 namespace badSQL
 {
 	//NOTE: requires an external check to avoid name clashes

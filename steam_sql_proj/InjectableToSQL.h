@@ -6,6 +6,7 @@
 #include <span>
 #include "Logger.h"
 #include "CharBuffer.h"
+#include "json.hpp"
 
 
 /*
@@ -29,9 +30,8 @@ return list;
 }
 */
 
-namespace badSQL {
-
-
+namespace badSQL
+{
 	std::string translate_sql_throw_message_to_peepo_table(const sql::SQLException& e)
 	{
 		const std::string& state = e.getSQLState();
@@ -97,17 +97,23 @@ namespace badSQL {
 		return "Undefined error: " + std::string(e.what());
 	}
 
-	class DBConnect final
-	{
 
+	struct injectable
+	{
+		std::string label;
+		nlohmann::json data;
+	};
+
+	std::vector<injectable> injectables;
+
+	class InjectableToSQL final
+	{
 	public:
-		DBConnect() = default;
-		DBConnect(const std::string& user, const std::string& service = "tcp://127.0.0.1:3306")
+		InjectableToSQL() = default;
+		InjectableToSQL(const std::string& user, const std::string& service = "tcp://127.0.0.1:3306")
 		{
 			connect(user, service);
 		}
-
-
 		std::string connect(const std::string& user, const std::string& service)
 		{
 			auto& logger = Logger::instance();
@@ -129,6 +135,33 @@ namespace badSQL {
 			return responce;
 		}
 
+		std::string set_schema(const std::string& schema) {
+			//if fails log, abort and fuck off. never create a db
+		}
+
+		std::string inject(std::vector<injectable> injectables) {
+			//the table should be predefined IN WORKBENCH. if not log, abort and fuck off
+		}
+
+		//for automation purposes, assuming schema and inejct worked try to call a stored procedure to automate actual distribution
+		std::string call_procedure(const std::string& procedure) {
+			//if fails log, abort and fuck off
+		}
+
+
+		void close()
+		{
+			mConnect.release();
+			mDriver = nullptr;
+		}
+
+	private:
+		sql::mysql::MySQL_Driver* mDriver = nullptr;
+		std::unique_ptr<sql::Connection> mConnect = nullptr;
+	};
+}
+
+/*
 		std::string do_simple_command(const std::string& command)
 		{
 			auto& logger = Logger::instance();
@@ -151,7 +184,7 @@ namespace badSQL {
 		{
 			auto& logger = Logger::instance();
 			std::string responce = "Success";
-		
+
 			try {
 				std::unique_ptr<sql::PreparedStatement> pstmt(mConnect->prepareStatement(statement));
 				binder(pstmt.get(), info);
@@ -161,7 +194,7 @@ namespace badSQL {
 				responce = translate_sql_throw_message_to_peepo_table(e);
 				logger.add_error(responce);
 			}
-			
+
 			return responce;
 		}
 		//TODO:: a good way to harden binder, not using poly. template allows for customs
@@ -201,15 +234,4 @@ namespace badSQL {
 
 			return responce;
 		}
-
-		void close()
-		{
-			mConnect.release();
-			mDriver = nullptr;
-		}
-
-	private:
-		sql::mysql::MySQL_Driver* mDriver = nullptr;
-		std::unique_ptr<sql::Connection> mConnect = nullptr;
-	};
-}
+*/

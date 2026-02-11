@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClCompile Include="bad_exceptions.cpp" />
     <ClCompile Include="CharBuffer.cpp" />
+    <ClCompile Include="injectables.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NumberGenerator.cpp" />
     <ClCompile Include="steam_urls.cpp" />
@@ -160,10 +161,11 @@
     <ClInclude Include="Logger.h" />
     <ClInclude Include="NumberGenerator.h" />
     <ClInclude Include="Sequence.h" />
-    <ClInclude Include="SQLConnect.h" />
+    <ClInclude Include="InjectableToSQL.h" />
     <ClInclude Include="steam_sql_commands.h" />
     <ClInclude Include="steam_urls.h" />
-    <ClInclude Include="web_request.h" />
+    <ClInclude Include="WebRequestHandle.h" />
+    <ClInclude Include="libcurl_request.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

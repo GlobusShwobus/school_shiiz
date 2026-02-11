@@ -11,6 +11,9 @@
     <Filter Include="thisproj">
       <UniqueIdentifier>{b6075953-f89b-4c0a-bc56-dc116e0bbff1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DEPRICATED">
+      <UniqueIdentifier>{af5c82d7-6e80-4c8a-99bc-8492a1e54393}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -26,6 +29,9 @@
       <Filter>thisproj</Filter>
     </ClCompile>
     <ClCompile Include="CharBuffer.cpp">
+      <Filter>thisproj</Filter>
+    </ClCompile>
+    <ClCompile Include="injectables.h">
       <Filter>thisproj</Filter>
     </ClCompile>
   </ItemGroup>
@@ -45,7 +51,7 @@
     <ClInclude Include="bad_exceptions.h">
       <Filter>Misc</Filter>
     </ClInclude>
-    <ClInclude Include="web_request.h">
+    <ClInclude Include="libcurl_request.h">
       <Filter>thisproj</Filter>
     </ClInclude>
     <ClInclude Include="steam_urls.h">
@@ -54,22 +60,25 @@
     <ClInclude Include="Logger.h">
       <Filter>thisproj</Filter>
     </ClInclude>
-    <ClInclude Include="Stuff.h">
-      <Filter>thisproj</Filter>
-    </ClInclude>
-    <ClInclude Include="steam_sql_commands.h">
-      <Filter>thisproj</Filter>
-    </ClInclude>
-    <ClInclude Include="SQLConnect.h">
-      <Filter>thisproj</Filter>
-    </ClInclude>
-    <ClInclude Include="custom_sql_command.h">
-      <Filter>thisproj</Filter>
-    </ClInclude>
-    <ClInclude Include="extract_and_bind.h">
+    <ClInclude Include="InjectableToSQL.h">
       <Filter>thisproj</Filter>
     </ClInclude>
     <ClInclude Include="CharBuffer.h">
+      <Filter>thisproj</Filter>
+    </ClInclude>
+    <ClInclude Include="extract_and_bind.h">
+      <Filter>DEPRICATED</Filter>
+    </ClInclude>
+    <ClInclude Include="steam_sql_commands.h">
+      <Filter>DEPRICATED</Filter>
+    </ClInclude>
+    <ClInclude Include="custom_sql_command.h">
+      <Filter>DEPRICATED</Filter>
+    </ClInclude>
+    <ClInclude Include="Stuff.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WebRequestHandle.h">
       <Filter>thisproj</Filter>
     </ClInclude>
   </ItemGroup>
