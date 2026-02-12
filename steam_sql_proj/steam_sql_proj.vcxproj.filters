@@ -25,13 +25,16 @@
     <ClCompile Include="NumberGenerator.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
-    <ClCompile Include="steam_urls.cpp">
+    <ClCompile Include="Steam_urls.cpp">
       <Filter>thisproj</Filter>
     </ClCompile>
     <ClCompile Include="CharBuffer.cpp">
       <Filter>thisproj</Filter>
     </ClCompile>
-    <ClCompile Include="injectables.h">
+    <ClCompile Include="Payload_array.h">
+      <Filter>thisproj</Filter>
+    </ClCompile>
+    <ClCompile Include="Payload_array.cpp">
       <Filter>thisproj</Filter>
     </ClCompile>
   </ItemGroup>
@@ -54,13 +57,13 @@
     <ClInclude Include="libcurl_request.h">
       <Filter>thisproj</Filter>
     </ClInclude>
-    <ClInclude Include="steam_urls.h">
+    <ClInclude Include="Steam_urls.h">
       <Filter>thisproj</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h">
       <Filter>thisproj</Filter>
     </ClInclude>
-    <ClInclude Include="InjectableToSQL.h">
+    <ClInclude Include="SQL_inserter.h">
       <Filter>thisproj</Filter>
     </ClInclude>
     <ClInclude Include="CharBuffer.h">
@@ -79,6 +82,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="WebRequestHandle.h">
+      <Filter>thisproj</Filter>
+    </ClInclude>
+    <ClInclude Include="Payload.h">
       <Filter>thisproj</Filter>
     </ClInclude>
   </ItemGroup>

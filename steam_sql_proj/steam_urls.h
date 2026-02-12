@@ -22,7 +22,6 @@ namespace badSQL
 		static constexpr std::string_view global_achv_percentages_baseurl =
 			"https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002/";
 
-
 		static constexpr std::string_view players_recent_activity_baseurl =
 			"https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/";
 	}

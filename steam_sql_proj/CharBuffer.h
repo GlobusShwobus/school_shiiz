@@ -5,7 +5,7 @@
 
 namespace badSQL
 {
-	class CharBuffer
+	class CharBuffer final
 	{
 	public:
 		CharBuffer();
@@ -14,20 +14,11 @@ namespace badSQL
 		CharBuffer(CharBuffer&&) = delete;
 		CharBuffer& operator=(CharBuffer&&) = delete;
 
-		char* data()noexcept {
-			return buffer.data();
-		}
+		char* data()noexcept;
 
-		std::size_t size()const noexcept
-		{
-			return buffer.size();
-		}
+		std::size_t size()const noexcept;
 
-		~CharBuffer()
-		{
-			std::fill(buffer.begin(), buffer.end(), '\0');
-			buffer.wipe();
-		}
+		~CharBuffer();
 
 	private:
 		Sequence<char> buffer;

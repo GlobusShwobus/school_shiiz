@@ -145,10 +145,11 @@
   <ItemGroup>
     <ClCompile Include="bad_exceptions.cpp" />
     <ClCompile Include="CharBuffer.cpp" />
-    <ClCompile Include="injectables.h" />
+    <ClCompile Include="Payload_array.cpp" />
+    <ClCompile Include="Payload_array.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NumberGenerator.cpp" />
-    <ClCompile Include="steam_urls.cpp" />
+    <ClCompile Include="Steam_urls.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bad_concepts.h" />
@@ -157,13 +158,14 @@
     <ClInclude Include="CharBuffer.h" />
     <ClInclude Include="custom_sql_command.h" />
     <ClInclude Include="extract_and_bind.h" />
+    <ClInclude Include="Payload.h" />
     <ClInclude Include="Stuff.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="NumberGenerator.h" />
     <ClInclude Include="Sequence.h" />
-    <ClInclude Include="InjectableToSQL.h" />
+    <ClInclude Include="SQL_inserter.h" />
     <ClInclude Include="steam_sql_commands.h" />
-    <ClInclude Include="steam_urls.h" />
+    <ClInclude Include="Steam_urls.h" />
     <ClInclude Include="WebRequestHandle.h" />
     <ClInclude Include="libcurl_request.h" />
   </ItemGroup>

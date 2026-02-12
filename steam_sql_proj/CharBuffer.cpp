@@ -36,4 +36,20 @@ namespace badSQL
 		buffer.emplace_back('\0');
 		std::cout.flush();
 	}
+
+	char* CharBuffer::data()noexcept
+	{
+		return buffer.data();
+	}
+
+	std::size_t CharBuffer::size()const noexcept
+	{
+		return buffer.size();
+	}
+
+	CharBuffer::~CharBuffer()
+	{
+		std::fill(buffer.begin(), buffer.end(), '\0');
+		buffer.wipe();
+	}
 }
