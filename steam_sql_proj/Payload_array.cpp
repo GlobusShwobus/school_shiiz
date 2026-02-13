@@ -20,7 +20,7 @@ namespace badSQL
 
 		injectables.push_back(std::move(dataset));
 
-		return "Success: created injectable \"" + *dataset.label + "\"";
+		return "Success";
 	}
 
 	std::string PayloadArray::try_make_payload(nlohmann::json&& data, std::string_view label, std::size_t id)noexcept
@@ -42,7 +42,7 @@ namespace badSQL
 
 		injectables.push_back(std::move(dataset));
 
-		return "Success: created injectable \"" + *dataset.label + "\"";
+		return "Success";
 	}
 
 	//ideally handle bs handles externally because if this fails it can return the full exception
@@ -76,7 +76,7 @@ namespace badSQL
 		dataset.recipient_id = id;
 		injectables.push_back(std::move(dataset));
 
-		return "Success: created injectable \"" + *dataset.label + "\"";
+		return "Success";
 	}
 
 	const Sequence<Payload>& PayloadArray::get()const noexcept

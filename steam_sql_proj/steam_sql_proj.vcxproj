@@ -145,6 +145,8 @@
   <ItemGroup>
     <ClCompile Include="bad_exceptions.cpp" />
     <ClCompile Include="CharBuffer.cpp" />
+    <ClCompile Include="Insert_statement.cpp" />
+    <ClCompile Include="Payload.cpp" />
     <ClCompile Include="Payload_array.cpp" />
     <ClCompile Include="Payload_array.h" />
     <ClCompile Include="main.cpp" />
@@ -158,6 +160,7 @@
     <ClInclude Include="CharBuffer.h" />
     <ClInclude Include="custom_sql_command.h" />
     <ClInclude Include="extract_and_bind.h" />
+    <ClInclude Include="Insert_statement.h" />
     <ClInclude Include="Payload.h" />
     <ClInclude Include="Stuff.h" />
     <ClInclude Include="Logger.h" />

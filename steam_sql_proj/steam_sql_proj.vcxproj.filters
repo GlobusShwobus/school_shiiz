@@ -8,11 +8,14 @@
     <Filter Include="Misc">
       <UniqueIdentifier>{3243701f-7bf0-4fc3-8974-66ef6d65e84a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="thisproj">
-      <UniqueIdentifier>{b6075953-f89b-4c0a-bc56-dc116e0bbff1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DEPRICATED">
       <UniqueIdentifier>{af5c82d7-6e80-4c8a-99bc-8492a1e54393}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="generics">
+      <UniqueIdentifier>{b6075953-f89b-4c0a-bc56-dc116e0bbff1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="customs">
+      <UniqueIdentifier>{4edd4c17-5a70-4fb8-926d-13f03c193e57}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -25,17 +28,23 @@
     <ClCompile Include="NumberGenerator.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
-    <ClCompile Include="Steam_urls.cpp">
-      <Filter>thisproj</Filter>
-    </ClCompile>
     <ClCompile Include="CharBuffer.cpp">
-      <Filter>thisproj</Filter>
+      <Filter>generics</Filter>
     </ClCompile>
-    <ClCompile Include="Payload_array.h">
-      <Filter>thisproj</Filter>
+    <ClCompile Include="Insert_statement.cpp">
+      <Filter>generics</Filter>
+    </ClCompile>
+    <ClCompile Include="Payload.cpp">
+      <Filter>customs</Filter>
     </ClCompile>
     <ClCompile Include="Payload_array.cpp">
-      <Filter>thisproj</Filter>
+      <Filter>customs</Filter>
+    </ClCompile>
+    <ClCompile Include="Payload_array.h">
+      <Filter>customs</Filter>
+    </ClCompile>
+    <ClCompile Include="Steam_urls.cpp">
+      <Filter>customs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -55,19 +64,16 @@
       <Filter>Misc</Filter>
     </ClInclude>
     <ClInclude Include="libcurl_request.h">
-      <Filter>thisproj</Filter>
-    </ClInclude>
-    <ClInclude Include="Steam_urls.h">
-      <Filter>thisproj</Filter>
+      <Filter>generics</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h">
-      <Filter>thisproj</Filter>
+      <Filter>generics</Filter>
     </ClInclude>
     <ClInclude Include="SQL_inserter.h">
-      <Filter>thisproj</Filter>
+      <Filter>generics</Filter>
     </ClInclude>
     <ClInclude Include="CharBuffer.h">
-      <Filter>thisproj</Filter>
+      <Filter>generics</Filter>
     </ClInclude>
     <ClInclude Include="extract_and_bind.h">
       <Filter>DEPRICATED</Filter>
@@ -82,10 +88,16 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="WebRequestHandle.h">
-      <Filter>thisproj</Filter>
+      <Filter>generics</Filter>
+    </ClInclude>
+    <ClInclude Include="Insert_statement.h">
+      <Filter>generics</Filter>
     </ClInclude>
     <ClInclude Include="Payload.h">
-      <Filter>thisproj</Filter>
+      <Filter>customs</Filter>
+    </ClInclude>
+    <ClInclude Include="Steam_urls.h">
+      <Filter>customs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

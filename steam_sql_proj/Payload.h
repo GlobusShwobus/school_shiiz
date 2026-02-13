@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <string>
+#include <cppconn/prepared_statement.h>
 #include "json.hpp"
 
 namespace badSQL
@@ -11,4 +12,7 @@ namespace badSQL
 		std::optional<std::string> label;
 		std::optional<nlohmann::json> data;//data = {} does not initalize the json, it calls the std::optional constructor... a pitfall to remember
 	};
+
+
+	void user_bind(sql::PreparedStatement* pstmt, const Payload& item);
 }

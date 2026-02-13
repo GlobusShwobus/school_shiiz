@@ -3,7 +3,6 @@
 
 namespace badSQL
 {
-	//?key=&steamid=
 	std::string makeurl_player_summary(std::string_view api_key, std::string_view steamid)
 	{
 		return std::format(

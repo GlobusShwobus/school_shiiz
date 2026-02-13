@@ -7,6 +7,7 @@
 #include <curl/curl.h>
 #include "SQL_inserter.h"
 #include "Stuff.h"
+#include "Payload.h"
 
 using namespace badSQL;
 
@@ -28,18 +29,23 @@ int main() {
             return -1;
         }
 
-        Payload load;
-        load.recipient_id=1;
-        load.label = "summary";
-        load.data = R"({"hello_world": 1})";
-        
+          
         
         SQLInserter testing_fails;
-        
         std::cout<<"\n\n"<<testing_fails.connect(host, ip);
-        std::cout<<"\n\n"<<testing_fails.set_schema(schema);
-        
-        std::string response = testing_fails.inject(load, "INSERT INTO raw_payloads (steamid, payload_type, payload) VALUES(?,?,?);");
+
+
+        Payload load;
+        load.recipient_id = 667;
+        load.label = "summary";
+        load.data = R"({"hello_world": 67})";
+
+        sql_insert_statement stmt("steamdb", "raw_payloads");
+        stmt.fields.push_back("steamid");
+        stmt.fields.push_back("payload_type");
+        stmt.fields.push_back("payload");
+
+        std::string response = testing_fails.inject(load, stmt);
         
         std::cout << "\n#############\n" << response << "\n#############\n";
         
