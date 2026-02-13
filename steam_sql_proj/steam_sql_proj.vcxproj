@@ -152,6 +152,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NumberGenerator.cpp" />
     <ClCompile Include="Steam_urls.cpp" />
+    <ClCompile Include="Stopwatch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bad_concepts.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="extract_and_bind.h" />
     <ClInclude Include="Insert_statement.h" />
     <ClInclude Include="Payload.h" />
+    <ClInclude Include="Stopwatch.h" />
     <ClInclude Include="Stuff.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="NumberGenerator.h" />

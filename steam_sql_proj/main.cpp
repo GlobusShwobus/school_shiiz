@@ -8,6 +8,7 @@
 #include "SQL_inserter.h"
 #include "Stuff.h"
 #include "Payload.h"
+#include "Stopwatch.h"
 
 using namespace badSQL;
 
@@ -29,26 +30,47 @@ int main() {
             return -1;
         }
 
-          
-        
-        SQLInserter testing_fails;
-        std::cout<<"\n\n"<<testing_fails.connect(host, ip);
-
-
-        Payload load;
-        load.recipient_id = 667;
-        load.label = "summary";
-        load.data = R"({"hello_world": 67})";
+        SQLInserter inserter;
+        std::cout << "\n\n" << inserter.connect(host, ip);
 
         sql_insert_statement stmt("steamdb", "raw_payloads");
         stmt.fields.push_back("steamid");
         stmt.fields.push_back("payload_type");
         stmt.fields.push_back("payload");
 
-        std::string response = testing_fails.inject(load, stmt);
-        
-        std::cout << "\n#############\n" << response << "\n#############\n";
-        
+
+        Payload load;
+        load.recipient_id = 1;
+        load.label = "summary";
+        load.data = R"({"hello_world"})";
+
+        Stopwatch single;
+        for (int i = 0; i < 500; i++) {
+            inserter.inject(load, stmt);
+        }
+        std::size_t single_time = single.dt_nanosec();
+
+
+        Sequence<Payload> loads;
+        for (int i = 0; i < 500; i++) {
+            Payload load2;
+            load2.recipient_id = i;
+            load2.label = "summary";
+            load2.data = R"({"hello_world"})";
+
+            loads.push_back(std::move(load2));
+        }
+
+
+        Stopwatch bulk;
+        inserter.inject_bulk(loads, stmt);
+        std::size_t bulk_time = bulk.dt_nanosec();
+
+
+
+        std::cout << "\n\nSingle: " << single_time << "\nBulk: " << bulk_time << "\n";
+
+
         curl_global_cleanup();
     }
 

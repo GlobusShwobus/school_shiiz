@@ -11,9 +11,15 @@
 namespace badSQL
 {
 	template <typename T>
-	concept BINDABLE = requires(sql::PreparedStatement * stmt, const T & v)
+	concept BINDABLE = requires(sql::PreparedStatement* stmt, const T& v)
 	{
-		user_bind(stmt, v);//adl magic
+		user_bind(stmt, v);
+	};
+
+	template <typename T>
+	concept BULK_BINDABLE = requires(sql::PreparedStatement* stmt, const T& v, std::size_t& i)
+	{
+		user_bind_bulk(stmt, v, i);
 	};
 
 	class SQLInserter final
@@ -63,23 +69,42 @@ namespace badSQL
 			return "Success";
 		}
 
-		template <BINDABLE T>
-		std::string inject(std::span<const T> data, const sql_insert_statement& statement) {
+		template <BULK_BINDABLE T>
+		std::string inject_bulk(const Sequence<T>& data, const sql_insert_statement& statement) {
 			//the table should be predefined IN WORKBENCH. if not log, abort and fuck off
 			if (!mConnect) {
 				return "No connection";
 			}
 			
-		
+			if (data.isEmpty())
+				return "Nothing to insert";
+
 			try {
 				const std::string insert_statement = build_sql_insert_query(statement, data.size());
 				std::unique_ptr<sql::PreparedStatement> pstmt(mConnect->prepareStatement(insert_statement));
 		
-				std::size_t param_index = 1;
-		
-				for (const auto& load : data) {
-		
+				std::size_t index = 1;
+				for (const auto& item : data) {
+					user_bind_bulk(pstmt.get(), item, index);
 				}
+				pstmt->execute();
+			}
+			catch (const sql::SQLException& e) {
+				return e.what();
+			}
+		
+			return "Success";
+		}
+
+		std::string inject_from_file(/*from file param*/ const std::string& insert_statement) {
+			//the table should be predefined IN WORKBENCH. if not log, abort and fuck off
+			if (!mConnect) {
+				return "No connection";
+			}
+		
+		
+		
+			try {
 		
 			}
 			catch (const sql::SQLException& e) {
@@ -88,24 +113,6 @@ namespace badSQL
 		
 			return "Success";
 		}
-
-		//std::string inject(/*from file param*/ const std::string& insert_statement) {
-		//	//the table should be predefined IN WORKBENCH. if not log, abort and fuck off
-		//	if (!mConnect) {
-		//		return "No connection";
-		//	}
-		//
-		//
-		//
-		//	try {
-		//
-		//	}
-		//	catch (const sql::SQLException& e) {
-		//
-		//	}
-		//
-		//	return "Success";
-		//}
 
 
 

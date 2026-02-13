@@ -15,4 +15,6 @@ namespace badSQL
 
 
 	void user_bind(sql::PreparedStatement* pstmt, const Payload& item);
+
+	void user_bind_bulk(sql::PreparedStatement* pstmt, const Payload& item, std::size_t& index);
 }

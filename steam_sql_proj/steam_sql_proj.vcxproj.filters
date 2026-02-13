@@ -46,6 +46,9 @@
     <ClCompile Include="Steam_urls.cpp">
       <Filter>customs</Filter>
     </ClCompile>
+    <ClCompile Include="Stopwatch.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sequence.h">
@@ -98,6 +101,9 @@
     </ClInclude>
     <ClInclude Include="Steam_urls.h">
       <Filter>customs</Filter>
+    </ClInclude>
+    <ClInclude Include="Stopwatch.h">
+      <Filter>Misc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
